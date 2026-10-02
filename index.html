@@ -301,6 +301,33 @@ tr.done .stt{color:var(--accent)}
 .sl-track{display:flex;transition:transform .6s var(--ease)}
 .slide{flex:0 0 100%;margin:0;position:relative}
 .slide img{width:100%;aspect-ratio:1920/1032;object-fit:contain;background:var(--bg-sunk)}
+.slide img{cursor:zoom-in}
+.sl-zoom{position:absolute;top:14px;right:14px;z-index:2;display:flex;align-items:center;gap:8px;height:36px;padding:0 13px;border-radius:10px;border:1px solid var(--line-2);background:rgba(18,19,22,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--text);font-size:13px;font-weight:500;opacity:.85;transition:opacity .2s,background .2s}
+.sl-zoom:hover{opacity:1;background:rgba(30,31,36,.9)}
+.sl-zoom svg{width:15px;height:15px}
+.lb{position:fixed;inset:0;z-index:200;display:grid;grid-template-rows:auto 1fr auto;background:rgba(10,10,13,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.lb.open{opacity:1;visibility:visible}
+.lb-top{display:flex;align-items:center;gap:14px;padding:14px clamp(14px,3vw,28px)}
+.lb-top .sl-count{flex:1}
+.lb-btn{width:42px;height:42px;border-radius:11px;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--mute);background:rgba(255,255,255,.03);transition:background .2s,color .2s}
+.lb-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.lb-btn svg{width:18px;height:18px}
+.lb-btn.on{color:var(--accent);border-color:var(--accent-line)}
+.lb-mid{position:relative;min-height:0;display:grid}
+.lb-stage{position:relative;min-height:0;overflow:hidden;display:grid;place-items:center;padding:0 clamp(8px,6vw,84px);touch-action:pan-y}
+.lb-stage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.55);cursor:zoom-in;user-select:none;-webkit-user-drag:none;transition:opacity .2s}
+.lb-stage.zoomed{overflow:auto;display:block;place-items:normal;padding:0;touch-action:auto}
+.lb-stage.zoomed img{max-width:none;max-height:none;border-radius:0;cursor:zoom-out;box-shadow:none}
+.lb-side{position:absolute;top:50%;transform:translateY(-50%);z-index:2}
+.lb-side.lb-p{left:clamp(8px,1.6vw,20px)}.lb-side.lb-n{right:clamp(8px,1.6vw,20px)}
+.lb-stage.zoomed~.lb-side{display:none}
+.lb-thumbs{display:flex;gap:8px;overflow-x:auto;padding:12px clamp(14px,3vw,28px) 16px;scrollbar-width:thin;justify-content:safe center}
+.lb-thumbs button{flex:none;width:96px;aspect-ratio:1920/1032;border-radius:7px;overflow:hidden;border:1px solid var(--line-2);opacity:.45;transition:opacity .2s,border-color .2s;background:var(--bg-sunk)}
+.lb-thumbs button:hover{opacity:.8}
+.lb-thumbs button.on{opacity:1;border-color:var(--accent)}
+.lb-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+body.lb-lock{overflow:hidden}
+@media (max-width:600px){.lb-side{display:none}.lb-thumbs button{width:72px}.sl-zoom span{display:none}}
 .slide.empty img{display:none}
 .slide.empty::before{content:attr(data-label);display:grid;place-items:center;aspect-ratio:1920/1032;font-family:var(--brand);word-spacing:.25em;font-size:clamp(16px,2.4vw,26px);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.22);text-align:center;padding:20px;
   background:repeating-linear-gradient(131deg,transparent 0 27px,rgba(255,255,255,.035) 27px 28px),var(--vit)}
@@ -664,7 +691,7 @@ footer li a:hover{color:var(--text)}
   <div class="head rv"><p class="idx"><b>04</b> <span data-en="Interface">Arayüz</span></p>
     <h2 class="bt" data-en='<span class="s">Screen</span><span class="o">shots</span>'><span class="s">Programdan</span> <span class="o">görüntüler</span></h2></div>
   <div class="slider rv" id="slider">
-    <div class="sl-view"><div class="sl-track" id="slTrack"></div></div>
+    <div class="sl-view" style="position:relative"><div class="sl-track" id="slTrack"></div><button type="button" class="sl-zoom" id="slZoom" data-ic="expand"><span data-en="Enlarge">Büyüt</span></button></div>
     <div class="sl-bar">
       <div style="flex:1"></div>
       <span class="sl-count" id="slCount"></span>
@@ -673,6 +700,22 @@ footer li a:hover{color:var(--text)}
     </div>
   </div>
 </div></section>
+
+
+<!-- ============ GÖRSEL BÜYÜTME ============ -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Görüntü">
+  <div class="lb-top">
+    <span class="sl-count" id="lbCount"></span>
+    <button type="button" class="lb-btn" id="lbZoom" data-ic="zoom" title="Yakınlaştır"></button>
+    <button type="button" class="lb-btn" id="lbClose" data-ic="close" title="Kapat"></button>
+  </div>
+  <div class="lb-mid">
+    <div class="lb-stage" id="lbStage"><img id="lbImg" alt=""></div>
+    <button type="button" class="lb-btn lb-side lb-p" id="lbPrev" data-ic="chevL" aria-label="‹"></button>
+    <button type="button" class="lb-btn lb-side lb-n" id="lbNext" data-ic="chevR" aria-label="›"></button>
+  </div>
+  <div class="lb-thumbs" id="lbThumbs"></div>
+</div>
 
 <!-- ============ LİSANS SATIN AL ============ -->
 <section id="lisans" data-sale><div class="wrap">
@@ -853,6 +896,9 @@ const SPRITE=`<svg width="0" height="0" style="position:absolute" aria-hidden="t
 <g id="i-info"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><path d="M12 7.6v.6"/></g>
 <g id="i-mail"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m3.8 7 8.2 6 8.2-6"/></g>
 <g id="i-discord"><path d="M8.6 6.2c-1.7.3-3.1.8-4.2 1.5-1.8 2.8-2.4 5.6-2.1 8.6 1.5 1.1 3 1.8 4.6 2.3l1.1-1.7"/><path d="M15.4 6.2c1.7.3 3.1.8 4.2 1.5 1.8 2.8 2.4 5.6 2.1 8.6-1.5 1.1-3 1.8-4.6 2.3l-1.1-1.7"/><path d="M7.6 16.4c2.9 1.2 5.9 1.2 8.8 0"/><path d="M8.2 7.6c2.5-.8 5.1-.8 7.6 0"/><circle cx="9.2" cy="12.6" r="1.1"/><circle cx="14.8" cy="12.6" r="1.1"/></g>
+<g id="i-expand"><path d="M14 4h6v6"/><path d="M20 4l-6.5 6.5"/><path d="M10 20H4v-6"/><path d="M4 20l6.5-6.5"/></g>
+<g id="i-zoom"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M10.5 7.8v5.4"/><path d="M7.8 10.5h5.4"/></g>
+<g id="i-close"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></g>
 <g id="i-chat"><path d="M20.5 12.5c0 4-3.8 7-8.5 7-1 0-2-.14-2.9-.4L4 21l1.3-3.6C4.2 16.1 3.5 14.4 3.5 12.5c0-4 3.8-7 8.5-7s8.5 3 8.5 7Z"/></g>
 <g id="i-send"><path d="M21 3 10.5 13.5"/><path d="M21 3 14.5 21l-4-7.5L3 9.5 21 3Z"/></g>
 <g id="i-copy"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 5.5h-9a2 2 0 0 0-2 2v9"/></g>
@@ -1175,7 +1221,7 @@ const avatar=(v)=>v.img?`<span class="av${v.crest?' crest':''}"><img src="${v.im
     [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
     $('#slCount').innerHTML=`<b>${String(cur+1).padStart(2,'0')}</b> / ${String(N).padStart(2,'0')}`;};
   const label=()=>slides.forEach((f,i)=>{f.dataset.label=L('Görsel ','Image ')+String(i+1).padStart(2,'0');f.querySelector('img').alt=f.dataset.label;});
-  const play=()=>{stop();if(!reduce)timer=setInterval(()=>go(cur+1),6000);};
+  const play=()=>{stop();if(!reduce&&!document.getElementById('lb').classList.contains('open'))timer=setInterval(()=>go(cur+1),6000);};
   const stop=()=>{if(timer)clearInterval(timer);timer=null;};
   $('#slPrev').onclick=()=>{go(cur-1);play();}; $('#slNext').onclick=()=>{go(cur+1);play();};
   [...dots.children].forEach((d,i)=>d.onclick=()=>{go(i);play();});
@@ -1185,6 +1231,40 @@ const avatar=(v)=>v.img?`<span class="av${v.crest?' crest':''}"><img src="${v.im
   vw.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>40)go(cur+(dx<0?1:-1));play();});
   renders.push(()=>{label();go(cur);});
   play();
+
+  /* --- büyütme (lightbox) --- */
+  const lb=$('#lb'),stage=$('#lbStage'),big=$('#lbImg'),th=$('#lbThumbs');
+  let li=0,zoomed=false,lastFocus=null;
+  th.innerHTML=CONFIG.shots.map((s,i)=>`<button type="button" aria-label="${i+1}"><img src="${s}" alt="" loading="lazy"></button>`).join('');
+  const setZoom=(z,ev)=>{zoomed=z&&big.naturalWidth>0;stage.classList.toggle('zoomed',zoomed);$('#lbZoom').classList.toggle('on',zoomed);
+    if(zoomed){big.style.width=Math.max(big.naturalWidth,stage.clientWidth*1.6)+'px';
+      requestAnimationFrame(()=>{const fx=ev?ev.fx:.5,fy=ev?ev.fy:.5;
+        stage.scrollLeft=big.offsetWidth*fx-stage.clientWidth/2;stage.scrollTop=big.offsetHeight*fy-stage.clientHeight/2;});}
+    else{big.style.width='';}};
+  const show=n=>{li=(n+N)%N;setZoom(false);big.src=CONFIG.shots[li];big.alt=slides[li].dataset.label||'';
+    $('#lbCount').innerHTML=`<b>${String(li+1).padStart(2,'0')}</b> / ${String(N).padStart(2,'0')}`;
+    [...th.children].forEach((b,i)=>b.classList.toggle('on',i===li));
+    const b=th.children[li];if(b)b.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});};
+  const open=n=>{if(slides[n]&&slides[n].classList.contains('empty'))return;stop();lastFocus=document.activeElement;
+    show(n);lb.classList.add('open');document.body.classList.add('lb-lock');$('#lbClose').focus();};
+  const close=()=>{lb.classList.remove('open');document.body.classList.remove('lb-lock');setZoom(false);go(li);play();
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();};
+  slides.forEach((f,i)=>f.querySelector('img').addEventListener('click',()=>open(i)));
+  $('#slZoom').onclick=()=>open(cur);
+  $('#lbClose').onclick=close; $('#lbPrev').onclick=()=>show(li-1); $('#lbNext').onclick=()=>show(li+1);
+  $('#lbZoom').onclick=()=>setZoom(!zoomed);
+  [...th.children].forEach((b,i)=>b.onclick=()=>show(i));
+  big.addEventListener('click',e=>{e.stopPropagation();
+    if(zoomed){setZoom(false);return;}
+    const rc=big.getBoundingClientRect(),cl=v=>isFinite(v)?Math.min(1,Math.max(0,v)):.5;setZoom(true,{fx:cl((e.clientX-rc.left)/rc.width),fy:cl((e.clientY-rc.top)/rc.height)});});
+  stage.addEventListener('click',e=>{if(e.target===stage&&!zoomed)close();});
+  document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;
+    if(e.key==='Escape'){zoomed?setZoom(false):close();}
+    else if(e.key==='ArrowRight'&&!zoomed)show(li+1);else if(e.key==='ArrowLeft'&&!zoomed)show(li-1);});
+  let lx=null;
+  stage.addEventListener('touchstart',e=>{if(!zoomed)lx=e.touches[0].clientX;},{passive:true});
+  stage.addEventListener('touchend',e=>{if(lx===null)return;const dx=e.changedTouches[0].clientX-lx;lx=null;if(Math.abs(dx)>40)show(li+(dx<0?1:-1));});
+  renders.push(()=>{$('#lbZoom').title=L('Yakınlaştır','Zoom');$('#lbClose').title=L('Kapat','Close');lb.setAttribute('aria-label',L('Görüntü','Image'));});
 })();
 
 /* ---------- başlat ---------- */
