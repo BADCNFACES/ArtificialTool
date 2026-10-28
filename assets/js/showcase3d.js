@@ -4,7 +4,7 @@
   "use strict";
   const BASE = "assets/models/";
   // önbellek kırıcı: model dosyaları aynı adla güncellenince tarayıcı eskisini kullanmasın
-  const VER = "5";
+  const VER = "6";
   const U = (f) => BASE + f + "?v=" + VER;
   const MODELS = {
     player:  { file: "player.glb", kind: "player" },
@@ -25,6 +25,7 @@
   };
   // görünüm seçenekleri (oyunun jenerik yüzleri, saçları, sakalları, ten tonları)
   const TONES = { 2: 21, 4: 41, 7: 71, 9: 91 };       // gövde ten no → Cranium ten kodu
+  const HAIRLINE = ["1", "104", "105", "110", "1065", "1080", "1090"];   // saç dibi dokusu olanlar
   const DEFAULT_LOOK = { face: "1007", tone: 4, hair: "1065", hairColor: "#1c1510", beard: "0" };
   function loadGLB(file) {
     if (!cache[file]) cache[file] = ATGLB.loadGLB(U(file));
@@ -32,7 +33,16 @@
   }
   async function cloneGLB(file) {
     const src = await loadGLB(file), o = src.clone(true);
-    o.traverse((m) => { if (m.isMesh) m.material = m.material.clone(); });
+    // Material.clone() userData'yı JSON ile kopyalar: içindeki dokular
+    // (saç kıl / örtü haritaları) kaybolur — kaynağınkini paylaş
+    const sm = [];
+    src.traverse((m) => { if (m.isMesh) sm.push(m.material); });
+    let i = 0;
+    o.traverse((m) => {
+      if (!m.isMesh) return;
+      const s0 = sm[i++] || m.material;
+      m.material = s0.clone(); m.material.userData = s0.userData;
+    });
     return o;
   }
   function loadAlpha(url) {
@@ -178,20 +188,40 @@
       grp.add(head);
       const tint = new THREE.Color(L.hairColor).convertSRGBToLinear();
       // saç / sakal kartları: parlama yok (eğik kartlarda ışık rengi baskın çıkıyordu)
+      // saç / sakal kartları — uygulamadaki gibi: renk = seçilen ton × kıl
+      // ayrıntısı (renk dokusunun G kanalı, 1. UV); örtü coeff dokusundan
+      // (kartlar G / 2. UV, başlık R). Parlama yok, tuvalde yarı saydam kalmaz.
       const matte = (m) => {
-        const o = m.material;
-        m.material = new THREE.MeshLambertMaterial({ map: o.map, color: tint, alphaTest: o.alphaTest || 0.3,
-                                                     side: THREE.DoubleSide, name: o.name });
-        // kesilen kartlar saydam tuvalde yarı saydam kalmasın (arka plan rengi sızıyordu)
-        m.material.onBeforeCompile = (sh) => {
-          sh.fragmentShader = sh.fragmentShader.replace("#include <alphatest_fragment>",
-            "#include <alphatest_fragment>\n\tdiffuseColor.a = 1.0;");
-        };
+        const o = m.material, u = o.userData || {};
+        const mat = new THREE.MeshLambertMaterial({ color: tint, side: THREE.DoubleSide, name: o.name });
+        if (u.detailMap && u.coeffMap) {
+          mat.onBeforeCompile = (sh) => {
+            sh.uniforms.detailMap = { value: u.detailMap };
+            sh.uniforms.coeffMap = { value: u.coeffMap };
+            sh.uniforms.gmean = { value: u.gmean || 0.5 };
+            sh.uniforms.chan = { value: u.ch || 0 };
+            sh.uniforms.cut = { value: u.cut || 0.2 };
+            sh.vertexShader = "attribute vec2 uvc;\nvarying vec2 vUvA;\nvarying vec2 vUvC;\n" +
+              sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n\tvUvA = uv; vUvC = uvc;");
+            sh.fragmentShader = "uniform sampler2D detailMap;\nuniform sampler2D coeffMap;\nuniform float gmean;\nuniform float chan;\nuniform float cut;\nvarying vec2 vUvA;\nvarying vec2 vUvC;\n" +
+              sh.fragmentShader.replace("#include <map_fragment>", [
+                "vec4 co_ = texture2D(coeffMap, vUvC);",
+                "float a_ = chan < 0.5 ? co_.r : co_.g;",
+                "if (a_ < cut) discard;",
+                "float g_ = texture2D(detailMap, vUvA).g;",
+                "float v_ = clamp(0.25 + pow(g_ / max(gmean, 0.05), 1.5), 0.15, 2.6);",
+                "float c_ = 0.4 + 0.8 * pow(clamp(a_, 0.0, 1.0), 0.7);",
+                "diffuseColor.rgb = max(diffuse, vec3(0.022)) * v_ * c_;",
+                "diffuseColor.a = 1.0;"].join("\n"));
+          };
+          mat.customProgramCacheKey = () => "hair2";
+        }
+        m.material = mat;
       };
       if (L.hair && L.hair !== "0") {
         const hair = await cloneGLB("hair_" + L.hair + ".glb").catch(() => null);
         if (hair) { hair.traverse((m) => { if (m.isMesh) matte(m); }); grp.add(hair); }
-        const hl = await loadAlpha(U("hairline_" + L.hair + ".png"));
+        const hl = HAIRLINE.includes(L.hair) ? await loadAlpha(U("hairline_" + L.hair + ".png")) : null;
         if (hl && headMesh) {
           const ov = new THREE.Mesh(headMesh.geometry, new THREE.MeshLambertMaterial({
             color: tint, map: hl, transparent: true, depthWrite: false,

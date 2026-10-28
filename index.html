@@ -594,7 +594,7 @@ footer li a:hover{color:var(--accent)}
   <div class="stage" id="heroStage" aria-label="3D">
     <div class="ghost" aria-hidden="true">artiFiCial</div>
     <div class="floor"></div>
-    <div class="poster" style="background-image:url(assets/models/poster-player.png?v=5)"></div>
+    <div class="poster" style="background-image:url(assets/models/poster-player.png?v=6)"></div>
     <div class="ld"><span data-en="LOADING 3D">3D YÜKLENİYOR</span><i></i></div>
     <div class="ov tr" id="heroKits"></div>
     <div class="ov bl"><span class="badge-var"><span><small>FC 27</small>3D</span></span></div>
@@ -924,8 +924,8 @@ footer li a:hover{color:var(--accent)}
 
 <script src="assets/vendor/three.min.js"></script>
 <script src="assets/vendor/OrbitControls.js"></script>
-<script src="assets/js/glb-mini.js?v=5"></script>
-<script src="assets/js/showcase3d.js?v=5"></script>
+<script src="assets/js/glb-mini.js?v=6"></script>
+<script src="assets/js/showcase3d.js?v=6"></script>
 <script>
 /* ============================================================
    AYAR — yayına almadan önce burayı düzenle
@@ -1357,11 +1357,11 @@ const IMG=Object.fromEntries(['arda-guler','vitinha','mbappe','saka','wirtz','sa
   const SRC={ball:'content/character/ball/',trophy:'content/worlds/trophy/',stadium:'stadiums/'};
   const M={
     player:{ic:'shirt',lb:['Forma','Kit'],tag:['Player Hub · Kits Hub','Player Hub · Kits Hub'],t:['Oyuncu & forma','Player & kit'],
-      d:['Oyunun gövde, forma, şort, tozluk ve krampon ağları, uygulamadaki gibi “eller arkada” duruşunda. Player Hub → Görünüm ve Kits Hub aynı ağları kullanır. Formaya bir Artificial tasarımı basıldı — üç takım arasında geç; yüzü, teni, saçı ve sakalı aşağıdan seç.',
-         "The game's body, jersey, shorts, sock and boot meshes in the app's “hands behind” stance. Player Hub → Appearance and Kits Hub use the same meshes. The kit carries an Artificial design — switch between three, and pick face, skin, hair and beard below."],
+      d:['Oyunun gövde, forma, şort, tozluk ve krampon ağları, uygulamadaki gibi “eller arkada” duruşunda. Player Hub → Görünüm ve Kits Hub aynı ağları kullanır. Formaya bir Artificial tasarımı basıldı — üç takım arasında geç; teni, saçı ve sakalı aşağıdan seç.',
+         "The game's body, jersey, shorts, sock and boot meshes in the app's “hands behind” stance. Player Hub → Appearance and Kits Hub use the same meshes. The kit carries an Artificial design — switch between three, and pick skin, hair and beard below."],
       src:'body/body_simhigh_0 · jersey_0 · shorts_0 · sock_0 · shoe_0',hub:['Görünüm, Forma','Appearance, Kits']},
-    face:{ic:'face',lb:['Yüz','Face'],tag:['Cranium Hub · Görünüm','Cranium Hub · Appearance'],t:['Jenerik yüzler','Generic faces'],
-      d:['Oyunun jenerik (gerçek olmayan) yüz ön ayarları — kafa, göz, diş, saç, sakal ve ten oyunun kendi ağları ve dokuları. Aşağıdan yüzü, ten tonunu, saçı, saç rengini ve sakalı değiştir; Cranium Hub aynı kafayı 646 kontrolle şekillendirir.',"The game's generic (non-scanned) face presets — head, eyes, teeth, hair, beard and skin are the game's own meshes and textures. Change the face, skin tone, hair, hair colour and beard below; Cranium Hub shapes the same head with 646 controls."],
+    face:{ic:'face',lb:['Yüz','Face'],tag:['Cranium Hub · Görünüm','Cranium Hub · Appearance'],t:['Jenerik yüz','Generic face'],
+      d:['Oyunun jenerik (gerçek olmayan) yüzlerinden biri — kafa, göz, diş, saç, sakal ve ten oyunun kendi ağları ve dokuları; saç ve sakal kartları oyundaki gibi kıl dokusu ve örtü kanallarıyla çiziliyor. Aşağıdan ten tonunu, saçı, saç rengini ve sakalı değiştir.',"One of the game's generic (non-scanned) faces — head, eyes, teeth, hair, beard and skin are the game's own meshes and textures, and the hair and beard cards are drawn with the game's strand and coverage channels. Change the skin tone, hair, hair colour and beard below."],
       src:'cranium fullhead · generichair · facialhair',hub:['Cranium Hub, Görünüm','Cranium Hub, Appearance']},
     ball:{ic:'ball',lb:['Toplar','Balls'],tag:['League · Tournament Hub','League · Tournament Hub'],t:['Maç topları','Match balls'],
       d:['League ve Tournament Hub turnuva, final ve kış topunu oyunun kendi top modelleri ve dokularıyla gösterir. Üstten topu değiştir.','League and Tournament Hub show the match, final and winter balls with the game\'s own ball models and textures. Switch the ball at the top.'],
@@ -1396,7 +1396,7 @@ const IMG=Object.fromEntries(['arda-guler','vitinha','mbappe','saka','wirtz','sa
   const info=()=>{const m=M[cur];
     card.innerHTML=`<span class="tag" lang="en">${svg(m.ic)} ${P(m.tag)}</span><h3>${P(m.t)}</h3><p>${P(m.d)}</p>
       <dl><div><dt>${L('Kaynak','Source')}</dt><dd>${srcOf(cur)}</dd></div><div><dt>${L('Programda','In the app')}</dt><dd>${P(m.hub)}</dd></div></dl>`;
-    $('#showPoster').style.backgroundImage=`url(assets/models/poster-${cur}.png?v=5)`;};
+    $('#showPoster').style.backgroundImage=`url(assets/models/poster-${cur}.png?v=6)`;};
   const varBtns=()=>{const vs=V[cur];varEl.style.display=vs?'':'none';if(!vs)return;
     varEl.innerHTML=vs.map(([k,l])=>`<button type="button" class="chip${k===sel[cur]?' on':''}" data-v="${k}">${P(l)}</button>`).join('');
     varEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{sel[cur]=b.dataset.v;varEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
@@ -1406,7 +1406,7 @@ const IMG=Object.fromEntries(['arda-guler','vitinha','mbappe','saka','wirtz','sa
       ?`<button type="button" class="sw${String(v)===String(look[k])?' on':''}" data-l="${k}" data-v="${v}" style="--c:${k==='tone'?l:v}" aria-label="${k==='tone'?v:P(l)}" title="${k==='tone'?'':P(l)}"></button>`
       :`<button type="button" class="chip${String(v)===String(look[k])?' on':''}" data-l="${k}" data-v="${v}">${P(l)}</button>`).join('')}</div></div>`;
     lookEl.innerHTML=`<span class="tag" lang="en">${svg('face')} Cranium · ${L('Görünüm','Appearance')}</span>`+
-      row('face',['Yüz','Face'],LK.face)+row('tone',['Ten','Skin'],LK.tone,1)+row('hair',['Saç','Hair'],LK.hair)+row('hairColor',['Saç rengi','Hair colour'],LK.hairColor,1)+row('beard',['Sakal','Beard'],LK.beard);
+      row('tone',['Ten','Skin'],LK.tone,1)+row('hair',['Saç','Hair'],LK.hair)+row('hairColor',['Saç rengi','Hair colour'],LK.hairColor,1)+row('beard',['Sakal','Beard'],LK.beard);
     lookEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.l;let v=b.dataset.v;if(k==='tone')v=+v;look[k]=v;
       lookEl.querySelectorAll(`[data-l="${k}"]`).forEach(x=>x.classList.toggle('on',x===b));
       if(show)show.look({[k]:v});});};

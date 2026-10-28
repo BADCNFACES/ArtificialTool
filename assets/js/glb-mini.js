@@ -88,6 +88,9 @@
         mat.normalScale = new THREE.Vector2(s, -s);
       }
       mat.userData = ex;
+      // saç / sakal: kıl ayrıntısı ve örtü dokuları (veri, sRGB değil)
+      if (ex.detailTex !== undefined) mat.userData.detailMap = await texture(ex.detailTex, false);
+      if (ex.coeffTex !== undefined) mat.userData.coeffMap = await texture(ex.coeffTex, false);
       if (m.alphaMode === "MASK") {   // saç kartları: parlamasın, tuvalde yarı saydam kalmasın
         mat.envMapIntensity = 0.12; mat.roughness = 1; mat.color.multiplyScalar(0.6);
         mat.onBeforeCompile = (sh) => {
@@ -109,6 +112,7 @@
         if (at.TEXCOORD_0 !== undefined) {
           const uv = new THREE.BufferAttribute(acc(at.TEXCOORD_0), 2);
           geo.setAttribute("uv", uv); geo.setAttribute("uv2", uv);
+          geo.setAttribute("uvc", at.TEXCOORD_1 !== undefined ? new THREE.BufferAttribute(acc(at.TEXCOORD_1), 2) : uv);
         }
         if (pr.indices !== undefined) geo.setIndex(new THREE.BufferAttribute(acc(pr.indices), 1));
         if (at.NORMAL === undefined) geo.computeVertexNormals();
