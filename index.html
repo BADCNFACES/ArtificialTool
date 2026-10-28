@@ -594,7 +594,7 @@ footer li a:hover{color:var(--accent)}
   <div class="stage" id="heroStage" aria-label="3D">
     <div class="ghost" aria-hidden="true">artiFiCial</div>
     <div class="floor"></div>
-    <div class="poster" style="background-image:url(assets/models/poster-player.png)"></div>
+    <div class="poster" style="background-image:url(assets/models/poster-player.png?v=5)"></div>
     <div class="ld"><span data-en="LOADING 3D">3D YÜKLENİYOR</span><i></i></div>
     <div class="ov tr" id="heroKits"></div>
     <div class="ov bl"><span class="badge-var"><span><small>FC 27</small>3D</span></span></div>
@@ -924,8 +924,8 @@ footer li a:hover{color:var(--accent)}
 
 <script src="assets/vendor/three.min.js"></script>
 <script src="assets/vendor/OrbitControls.js"></script>
-<script src="assets/js/glb-mini.js"></script>
-<script src="assets/js/showcase3d.js"></script>
+<script src="assets/js/glb-mini.js?v=5"></script>
+<script src="assets/js/showcase3d.js?v=5"></script>
 <script>
 /* ============================================================
    AYAR — yayına almadan önce burayı düzenle
@@ -1396,7 +1396,7 @@ const IMG=Object.fromEntries(['arda-guler','vitinha','mbappe','saka','wirtz','sa
   const info=()=>{const m=M[cur];
     card.innerHTML=`<span class="tag" lang="en">${svg(m.ic)} ${P(m.tag)}</span><h3>${P(m.t)}</h3><p>${P(m.d)}</p>
       <dl><div><dt>${L('Kaynak','Source')}</dt><dd>${srcOf(cur)}</dd></div><div><dt>${L('Programda','In the app')}</dt><dd>${P(m.hub)}</dd></div></dl>`;
-    $('#showPoster').style.backgroundImage=`url(assets/models/poster-${cur}.png)`;};
+    $('#showPoster').style.backgroundImage=`url(assets/models/poster-${cur}.png?v=5)`;};
   const varBtns=()=>{const vs=V[cur];varEl.style.display=vs?'':'none';if(!vs)return;
     varEl.innerHTML=vs.map(([k,l])=>`<button type="button" class="chip${k===sel[cur]?' on':''}" data-v="${k}">${P(l)}</button>`).join('');
     varEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{sel[cur]=b.dataset.v;varEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));

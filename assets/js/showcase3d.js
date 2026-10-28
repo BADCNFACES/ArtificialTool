@@ -3,6 +3,9 @@
 (function (g) {
   "use strict";
   const BASE = "assets/models/";
+  // önbellek kırıcı: model dosyaları aynı adla güncellenince tarayıcı eskisini kullanmasın
+  const VER = "5";
+  const U = (f) => BASE + f + "?v=" + VER;
   const MODELS = {
     player:  { file: "player.glb", kind: "player" },
     ball:    { file: "ball.glb", kind: "prop", size: 0.22 },
@@ -24,7 +27,7 @@
   const TONES = { 2: 21, 4: 41, 7: 71, 9: 91 };       // gövde ten no → Cranium ten kodu
   const DEFAULT_LOOK = { face: "1007", tone: 4, hair: "1065", hairColor: "#1c1510", beard: "0" };
   function loadGLB(file) {
-    if (!cache[file]) cache[file] = ATGLB.loadGLB(BASE + file);
+    if (!cache[file]) cache[file] = ATGLB.loadGLB(U(file));
     return cache[file];
   }
   async function cloneGLB(file) {
@@ -101,7 +104,7 @@
 
   function getModel(name, onProgress) {
     const f = MODELS[name].file;
-    if (!cache[f]) cache[f] = ATGLB.loadGLB(BASE + f, onProgress);
+    if (!cache[f]) cache[f] = ATGLB.loadGLB(U(f), onProgress);
     return cache[f];
   }
 
@@ -164,13 +167,12 @@
 
     let current = null, curName = "", kitName = "home", homeMaps = null, spinObj = null;
     const LOOK = Object.assign({}, DEFAULT_LOOK, opts.look || {});
-    let lookGen = 0;
     async function applyLook(obj) {
-      const gen = ++lookGen, L = Object.assign({}, LOOK);
+      const gen = obj.userData.lookGen = (obj.userData.lookGen || 0) + 1, L = Object.assign({}, LOOK);
       const old = obj.getObjectByName("__look");
       const grp = new THREE.Group(); grp.name = "__look";
       const head = await cloneGLB("head_" + L.face + ".glb");
-      const htex = await loadTex(BASE + "headtex_" + L.face + "_" + TONES[L.tone] + ".jpg").catch(() => null);
+      const htex = await loadTex(U("headtex_" + L.face + "_" + TONES[L.tone] + ".jpg")).catch(() => null);
       let headMesh = null;
       head.traverse((m) => { if (m.isMesh && m.material.name === "head") { headMesh = m; if (htex) { m.material.map = htex; m.material.needsUpdate = true; } } });
       grp.add(head);
@@ -189,7 +191,7 @@
       if (L.hair && L.hair !== "0") {
         const hair = await cloneGLB("hair_" + L.hair + ".glb").catch(() => null);
         if (hair) { hair.traverse((m) => { if (m.isMesh) matte(m); }); grp.add(hair); }
-        const hl = await loadAlpha(BASE + "hairline_" + L.hair + ".png");
+        const hl = await loadAlpha(U("hairline_" + L.hair + ".png"));
         if (hl && headMesh) {
           const ov = new THREE.Mesh(headMesh.geometry, new THREE.MeshLambertMaterial({
             color: tint, map: hl, transparent: true, depthWrite: false,
@@ -201,8 +203,8 @@
         const b = await cloneGLB("beard_" + L.beard + ".glb").catch(() => null);
         if (b) { b.traverse((m) => { if (m.isMesh) matte(m); }); grp.add(b); }
       }
-      const [su, sl] = await Promise.all([loadTex(BASE + "skin_" + L.tone + "_upper.jpg"), loadTex(BASE + "skin_" + L.tone + "_lower.jpg")]).catch(() => [null, null]);
-      if (gen !== lookGen) return;
+      const [su, sl] = await Promise.all([loadTex(U("skin_" + L.tone + "_upper.jpg")), loadTex(U("skin_" + L.tone + "_lower.jpg"))]).catch(() => [null, null]);
+      if (gen !== obj.userData.lookGen) return;
       obj.traverse((m) => {
         if (!m.isMesh) return;
         if (m.material.name === "skin_upper" && su) { m.material.map = su; m.material.needsUpdate = true; }
@@ -305,6 +307,9 @@
         if (!objs[name]) {
           const src = await getModel(name, setProgress);
           objs[name] = src.clone(true);
+          if (["player", "face"].includes(MODELS[name].kind)) {
+            for (const c of [...objs[name].children]) if (["head", "hair", "haircap", "neck"].includes(c.name)) objs[name].remove(c);
+          }
           objs[name].traverse((m) => { if (m.isMesh) m.material = m.material.clone(); });
         }
         obj = objs[name];
@@ -333,7 +338,7 @@
       const parts = [];
       current.traverse((m) => { if (m.isMesh && homeMaps && homeMaps[m.name]) parts.push(m); });
       for (const m of parts) {
-        const t = name === "home" ? homeMaps[m.name] : await loadTex(BASE + "kit_" + name + "_" + m.name + ".jpg");
+        const t = name === "home" ? homeMaps[m.name] : await loadTex(U("kit_" + name + "_" + m.name + ".jpg"));
         if (kitName !== name) return;
         m.material.map = t; m.material.needsUpdate = true;
       }
