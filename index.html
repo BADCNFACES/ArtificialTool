@@ -262,6 +262,8 @@ html:not(.presale) [data-presale]{display:none!important}
 .rt-g{color:var(--ok)!important}.rt-y{color:var(--warn)!important}
 .crest{width:30px;height:30px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;overflow:hidden;flex:none;border:1px solid var(--line)}
 .crest img{width:100%;height:100%;object-fit:contain}
+.crest>span{display:grid;place-items:center;width:100%;height:100%;background:var(--accent-soft)}
+.crest svg{width:16px;height:16px;color:var(--accent)}
 .crest.face img{object-fit:cover}
 .srow{display:grid;grid-template-columns:minmax(0,1.1fr) 26px minmax(0,1fr);align-items:center;gap:10px;padding:11px 8px;border-top:1px solid var(--line)}
 .srow:first-child{border-top:0}
@@ -1174,8 +1176,8 @@ const IMG=Object.fromEntries(['arda-guler','vitinha','mbappe','saka','wirtz','sa
    text:["Takımın bütün formaları 3D askıda; tıkla, düzenle. Renk, numara, isim, model ve arma panelleri oyunun gerçek forma dokusu ve yazı tipleriyle çalışır. Team Hub'daki soyunma odası her oyuncunun formasını arkadan, adı ve numarasıyla gösterir.","Every kit of the team hangs on a 3D rack; click to edit. Colour, number, name, model and crest panels work with the game's real kit textures and fonts. The locker room in Team Hub shows each player's shirt from the back with name and number."],
    list:[[['3D forma askısı','3D kit rack'],['iç saha, deplasman, alternatif, kaleci','home, away, third, goalkeeper']],[['Numara ve isim','Number and name'],['oyundaki bütün forma yazı tipleri','every kit font in the game']],[['Soyunma odası','Locker room'],['forma numaraları çakışmadan','squad numbers without clashes']]],
    top:'spark|Kits Hub — Arsenal',
-   body:()=>[['İç saha',['numara 12 · isim büyük harf','number font 12 · upper-case name'],['hazır','ready'],IMG.arsenal],['Deplasman',['numara 12 · isim büyük harf','number font 12 · upper-case name'],['hazır','ready'],IMG.arsenal],
-     ['Alternatif',['yeni tür eklendi','new kit type added'],['düzenleniyor','editing'],IMG.arsenal],['Kaleci',['kopyalandı: Napoli','copied from Napoli'],['hazır','ready'],IMG.napoli]]
+   body:()=>[['İç saha',['numara 12 · isim büyük harf','number font 12 · upper-case name'],['hazır','ready'],'ic:shirt'],['Deplasman',['numara 12 · isim büyük harf','number font 12 · upper-case name'],['hazır','ready'],'ic:shirt'],
+     ['Alternatif',['yeni tür eklendi','new kit type added'],['düzenleniyor','editing'],'ic:shirt'],['Kaleci',['kopyalandı: Napoli','copied from Napoli'],['hazır','ready'],'ic:shirt']]
      .map(([a,b,c,img])=>row(L(a,{'İç saha':'Home',Deplasman:'Away',Alternatif:'Third',Kaleci:'Goalkeeper'}[a]),P(b),P(c),img)).join('')},
   {ic:'face',tab:['Cranium Hub','Cranium Hub'],title:['Cranium Hub','Cranium Hub'],
    text:["Oyundaki jenerik (gerçek olmayan) yüzler için stüdyo. Oyunun 646 Cranium kontrolü bölge bölge 3D kafada; Kolay sekmesinde büyük, anlaşılır kaydırıcılar. Fotoğraftan yüz, önden bir portreden (istersen yan ve 3/4 açıyla) şekli ve renkleri çıkarır — tamamen yerel.","A studio for the game's generic (non-scanned) faces. All 646 Cranium controls region by region on a 3D head; the Easy tab has large, plain sliders. Face-from-photo takes the shape and colours from a front portrait (plus optional side and 3/4 shots) — fully local."],
