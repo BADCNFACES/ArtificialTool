@@ -12,8 +12,31 @@
     b18: { file: "ball_18.glb", kind: "prop" },
     face:    { file: "player.glb", kind: "face" },
     trophy:  { file: "trophy.glb", kind: "trophy" },
+    t1507: { file: "trophy_1507.glb", kind: "trophy" }, t846: { file: "trophy_846.glb", kind: "trophy" },
+    t840: { file: "trophy_840.glb", kind: "trophy" }, t981: { file: "trophy_981.glb", kind: "trophy" },
     stadium: { file: "stadium.glb", kind: "stadium" },
+    s_bl: { file: "stadium_generic_british_large.glb", kind: "stadium" },
+    s_eo: { file: "stadium_generic_eastern_olympic_large.glb", kind: "stadium" },
+    s_mm: { file: "stadium_generic_modern_medium.glb", kind: "stadium" },
+    s_sa: { file: "stadium_generic_south_american.glb", kind: "stadium" },
   };
+  // görünüm seçenekleri (oyunun jenerik yüzleri, saçları, sakalları, ten tonları)
+  const TONES = { 2: 21, 4: 41, 7: 71, 9: 91 };       // gövde ten no → Cranium ten kodu
+  const DEFAULT_LOOK = { face: "1007", tone: 4, hair: "1065", hairColor: "#1c1510", beard: "0" };
+  function loadGLB(file) {
+    if (!cache[file]) cache[file] = ATGLB.loadGLB(BASE + file);
+    return cache[file];
+  }
+  async function cloneGLB(file) {
+    const src = await loadGLB(file), o = src.clone(true);
+    o.traverse((m) => { if (m.isMesh) m.material = m.material.clone(); });
+    return o;
+  }
+  function loadAlpha(url) {
+    if (texCache[url]) return texCache[url];
+    texCache[url] = new Promise((ok) => new THREE.TextureLoader().load(url, (t) => { t.flipY = false; ok(t); }, undefined, () => ok(null)));
+    return texCache[url];
+  }
   const KITS = ["home", "away", "third"];
   const cache = {};
   const texCache = {};
@@ -36,8 +59,8 @@
       m.position.set(p[0], p[1], p[2]); m.rotation.set(r[0], r[1], r[2]); s.add(m);
     };
     panel(5, 2.2, 0xfff1f8, [0, 4.8, 0], [Math.PI / 2, 0, 0]);       // tavan softbox
-    panel(2.2, 5, 0xf2a7c8, [-4.9, 1, 1], [0, Math.PI / 2, 0]);      // gül
-    panel(2.2, 5, 0xa9a8e0, [4.9, 1, -1], [0, -Math.PI / 2, 0]);     // lavanta
+    panel(2.2, 5, 0xf3d9e6, [-4.9, 1, 1], [0, Math.PI / 2, 0]);      // gül
+    panel(2.2, 5, 0xd9d9f0, [4.9, 1, -1], [0, -Math.PI / 2, 0]);     // lavanta
     panel(6, 1.2, 0x5a3a52, [0, -1, -4.9], [0, 0, 0]);
     const t = pm.fromScene(s, 0.035).texture;
     pm.dispose();
@@ -109,10 +132,11 @@
     controls.autoRotate = true; controls.autoRotateSpeed = hero ? 0.9 : 1.2;
 
     // ışıklar
-    scene.add(new THREE.HemisphereLight(0xffe9f4, 0x1a0f1a, 0.55));
-    const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(2.5, 4, 4); scene.add(key);
-    const rimR = new THREE.DirectionalLight(0xf2a7c8, 2.2); rimR.position.set(-4, 2.5, -3); scene.add(rimR);
-    const rimL = new THREE.DirectionalLight(0xa9a8e0, 1.8); rimL.position.set(4, 2, -3.5); scene.add(rimL);
+    scene.add(new THREE.HemisphereLight(0xfff4f8, 0x1a1418, 0.7));
+    const key = new THREE.DirectionalLight(0xffffff, 1.7); key.position.set(2.5, 4, 4); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.45); fill.position.set(-3, 1.5, 3); scene.add(fill);
+    const rimR = new THREE.DirectionalLight(0xf6cfe2, 1.25); rimR.position.set(-4, 2.5, -3); scene.add(rimR);
+    const rimL = new THREE.DirectionalLight(0xcfcfee, 1.0); rimL.position.set(4, 2, -3.5); scene.add(rimL);
 
     // sahne zemini: parlayan halka + gölge
     const stage = new THREE.Group(); scene.add(stage);
@@ -139,6 +163,61 @@
     ped.add(pedBody, pedRim); scene.add(ped); ped.visible = false;
 
     let current = null, curName = "", kitName = "home", homeMaps = null, spinObj = null;
+    const LOOK = Object.assign({}, DEFAULT_LOOK, opts.look || {});
+    let lookGen = 0;
+    async function applyLook(obj) {
+      const gen = ++lookGen, L = Object.assign({}, LOOK);
+      const old = obj.getObjectByName("__look");
+      const grp = new THREE.Group(); grp.name = "__look";
+      const head = await cloneGLB("head_" + L.face + ".glb");
+      const htex = await loadTex(BASE + "headtex_" + L.face + "_" + TONES[L.tone] + ".jpg").catch(() => null);
+      let headMesh = null;
+      head.traverse((m) => { if (m.isMesh && m.material.name === "head") { headMesh = m; if (htex) { m.material.map = htex; m.material.needsUpdate = true; } } });
+      grp.add(head);
+      const tint = new THREE.Color(L.hairColor).convertSRGBToLinear();
+      // saç / sakal kartları: parlama yok (eğik kartlarda ışık rengi baskın çıkıyordu)
+      const matte = (m) => {
+        const o = m.material;
+        m.material = new THREE.MeshLambertMaterial({ map: o.map, color: tint, alphaTest: o.alphaTest || 0.3,
+                                                     side: THREE.DoubleSide, name: o.name });
+        // kesilen kartlar saydam tuvalde yarı saydam kalmasın (arka plan rengi sızıyordu)
+        m.material.onBeforeCompile = (sh) => {
+          sh.fragmentShader = sh.fragmentShader.replace("#include <alphatest_fragment>",
+            "#include <alphatest_fragment>\n\tdiffuseColor.a = 1.0;");
+        };
+      };
+      if (L.hair && L.hair !== "0") {
+        const hair = await cloneGLB("hair_" + L.hair + ".glb").catch(() => null);
+        if (hair) { hair.traverse((m) => { if (m.isMesh) matte(m); }); grp.add(hair); }
+        const hl = await loadAlpha(BASE + "hairline_" + L.hair + ".png");
+        if (hl && headMesh) {
+          const ov = new THREE.Mesh(headMesh.geometry, new THREE.MeshLambertMaterial({
+            color: tint, map: hl, transparent: true, depthWrite: false,
+            polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+          ov.renderOrder = 1; headMesh.parent.add(ov);
+        }
+      }
+      if (L.beard && L.beard !== "0") {
+        const b = await cloneGLB("beard_" + L.beard + ".glb").catch(() => null);
+        if (b) { b.traverse((m) => { if (m.isMesh) matte(m); }); grp.add(b); }
+      }
+      const [su, sl] = await Promise.all([loadTex(BASE + "skin_" + L.tone + "_upper.jpg"), loadTex(BASE + "skin_" + L.tone + "_lower.jpg")]).catch(() => [null, null]);
+      if (gen !== lookGen) return;
+      obj.traverse((m) => {
+        if (!m.isMesh) return;
+        if (m.material.name === "skin_upper" && su) { m.material.map = su; m.material.needsUpdate = true; }
+        if (m.material.name === "skin_lower" && sl) { m.material.map = sl; m.material.needsUpdate = true; }
+      });
+      if (old) obj.remove(old);
+      obj.add(grp);
+      wake();
+    }
+    async function look(part) {
+      Object.assign(LOOK, part || {});
+      const jobs = [];
+      for (const k of ["player", "face"]) if (objs[k]) jobs.push(applyLook(objs[k]));
+      await Promise.all(jobs);
+    }
     const objs = {};
     let pitch = null;
     const holder = new THREE.Group(); scene.add(holder);
@@ -162,8 +241,8 @@
         obj.position.set(-c.x, -box.min.y, -c.z);
         stage.scale.setScalar(0.62); ring.visible = true;
         const h = size.y;
-        controls.target.set(0, h * 0.925, 0.02);
-        cam.position.set(0.14, h * 0.94, 0.95);
+        controls.target.set(0, h * 0.915, 0.02);
+        cam.position.set(0.14, h * 0.93, 1.0);
         cam.fov = 28;
         controls.minPolarAngle = 1.2; controls.maxPolarAngle = 1.85;
       } else if (k === "prop") {
@@ -184,7 +263,7 @@
         obj.position.set(-c.x, -box.min.y, -c.z);
         if (!obj.userData.toned) {
           obj.userData.toned = true;
-          obj.traverse((m) => { if (m.isMesh && m.material !== (pitch && pitch.material)) { m.material.envMapIntensity = 0.45; m.material.color.multiplyScalar(0.72); } });
+          obj.traverse((m) => { if (m.isMesh && m.material !== (pitch && pitch.material)) { m.material.envMapIntensity = 0.3; m.material.color.multiplyScalar(0.55); } });
         }
         stage.visible = false;
         if (!pitch) {
@@ -192,10 +271,15 @@
             new THREE.MeshStandardMaterial({ map: pitchTex(), roughness: 0.9, metalness: 0 }));
           pitch.rotation.x = -Math.PI / 2; pitch.position.y = 0.06;
         }
-        obj.add(pitch); pitch.position.set(c.x, 0.08 + box.min.y, c.z);
+        // saha yüzeyinin yüksekliği: ortadan aşağı ışın (çatı / tribün atlanır)
+        obj.updateMatrixWorld(true);
+        const rc = new THREE.Raycaster(new THREE.Vector3(0, size.y + 10, 0), new THREE.Vector3(0, -1, 0));
+        const hits = rc.intersectObject(obj, true).filter((h) => h.point.y < 5);
+        const gy = hits.length ? hits[0].point.y : 0;
+        obj.add(pitch); pitch.position.set(c.x, gy - obj.position.y + 0.05, c.z);
         const R = Math.max(size.x, size.z);
-        controls.target.set(0, 2, 0);
-        cam.position.set(R * 0.62, R * 0.42, R * 0.78);
+        controls.target.set(0, 0, 0);
+        cam.position.set(R * 0.85, R * 0.6, R * 1.05);
         cam.fov = 34;
         controls.minPolarAngle = 0.25; controls.maxPolarAngle = 1.38;
       }
@@ -234,6 +318,8 @@
         obj.traverse((m) => { if (m.isMesh && ["jersey", "shorts", "socks"].includes(m.name)) obj.userData.homeMaps[m.name] = m.material.map; });
       }
       homeMaps = obj.userData.homeMaps || null;
+      if (homeMaps && !obj.getObjectByName("__look")) await applyLook(obj).catch((e) => console.warn(e));
+      if (name !== curName) return;
       frame(name, obj);
       if (homeMaps) kit(kitName);
       host.classList.remove("loading", "err");
@@ -293,7 +379,7 @@
     host.addEventListener("pointerdown", wake);
 
     const ready = show(opts.model || "player").then(() => true);
-    return { show, kit, zoom, ready, kits: KITS };
+    return { show, kit, zoom, look, ready, kits: KITS, getLook: () => Object.assign({}, LOOK) };
   }
 
   g.ATShow = { create, webgl };

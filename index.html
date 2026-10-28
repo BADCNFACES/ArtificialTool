@@ -532,6 +532,17 @@ footer li a:hover{color:var(--accent)}
 
 .viewer:not([data-m=player]) .vnote{display:none}
 
+.vcard.look{display:grid;gap:12px;padding:20px 22px}
+.vcard.look .tag{margin-bottom:0}
+.lrow{display:grid;gap:7px}
+.lrow .ll{font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.lch{display:flex;flex-wrap:wrap;gap:6px}
+.lch .chip{height:28px;padding:0 11px;font-size:12px;background:var(--surface-2)}
+.lch .chip.on{background:var(--accent);color:var(--on-accent)}
+.sw{width:28px;height:28px;border-radius:50%;background:var(--c);border:2px solid rgba(255,255,255,.14);transition:transform .15s,box-shadow .15s}
+.sw:hover{transform:scale(1.08)}
+.sw.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+
 </style>
 </head>
 <body>
@@ -618,6 +629,7 @@ footer li a:hover{color:var(--accent)}
     </div>
     <div class="vinfo">
       <div class="vcard" id="vCard"></div>
+      <div class="vcard look" id="lookCard"></div>
       <p class="vnote" data-ic="info"> <span data-en="The kit on the player is an Artificial design baked onto the game's kit mesh; the models are shown here only as a preview of what the tool works with.">Oyuncunun üstündeki forma, oyunun forma ağına basılmış bir Artificial tasarımı; modeller burada yalnızca programın neyle çalıştığını göstermek için yer alıyor.</span></p>
     </div>
   </div>
@@ -1336,51 +1348,77 @@ const IMG=Object.fromEntries(['arda-guler','vitinha','mbappe','saka','wirtz','sa
 /* ---------- 3D: hero + vitrin ---------- */
 (()=>{
   const K=[['home',['İç saha','Home']],['away',['Deplasman','Away']],['third',['Alternatif','Third']]];
+  // her rail öğesinin seçenekleri: [model anahtarı, ad, kaynak yolu]
+  const V={
+    ball:[['b6','FC Volt','ball_6'],['b18','FC Blue','ball_18'],['b10','EA Red','ball_10'],['b12','EA Yellow','ball_12'],['b0','FC Navy','ball_0'],['ball',['Klasik','Classic'],'ball_16'],['classic',['Deri','Leather'],'ball_2']],
+    trophy:[['t1507',['Altın kupa','Gold cup'],'trophy_1507'],['trophy',['Gümüş kupa','Silver cup'],'trophy_22'],['t846',['Gümüş kâse','Silver bowl'],'trophy_846'],['t840',['Lig kupası','League cup'],'trophy_840'],['t981',['Altın vazo','Gold urn'],'trophy_981']],
+    stadium:[['s_bl',['Büyük İngiliz','British large'],'generic_british_large'],['stadium',['Küçük İngiliz','British small'],'generic_british_small'],['s_eo',['Olimpik','Olympic'],'generic_eastern_olympic_large'],['s_mm',['Modern','Modern'],'generic_modern_medium'],['s_sa',['Güney Amerika','South American'],'generic_south_american']],
+  };
+  const SRC={ball:'content/character/ball/',trophy:'content/worlds/trophy/',stadium:'stadiums/'};
   const M={
     player:{ic:'shirt',lb:['Forma','Kit'],tag:['Player Hub · Kits Hub','Player Hub · Kits Hub'],t:['Oyuncu & forma','Player & kit'],
-      d:['Oyunun gövde, forma, şort, tozluk ve krampon ağları. Player Hub → Görünüm ve Kits Hub aynı ağları kullanır; formayı değiştirince model anında güncellenir. Burada formaya bir Artificial tasarımı basıldı — üç takım arasında geç.',
-         "The game's body, jersey, shorts, sock and boot meshes. Player Hub → Appearance and Kits Hub use the same meshes and update the model as you edit. Here the kit carries an Artificial design — switch between three."],
+      d:['Oyunun gövde, forma, şort, tozluk ve krampon ağları, uygulamadaki gibi “eller arkada” duruşunda. Player Hub → Görünüm ve Kits Hub aynı ağları kullanır. Formaya bir Artificial tasarımı basıldı — üç takım arasında geç; yüzü, teni, saçı ve sakalı aşağıdan seç.',
+         "The game's body, jersey, shorts, sock and boot meshes in the app's “hands behind” stance. Player Hub → Appearance and Kits Hub use the same meshes. The kit carries an Artificial design — switch between three, and pick face, skin, hair and beard below."],
       src:'body/body_simhigh_0 · jersey_0 · shorts_0 · sock_0 · shoe_0',hub:['Görünüm, Forma','Appearance, Kits']},
+    face:{ic:'face',lb:['Yüz','Face'],tag:['Cranium Hub · Görünüm','Cranium Hub · Appearance'],t:['Jenerik yüzler','Generic faces'],
+      d:['Oyunun jenerik (gerçek olmayan) yüz ön ayarları — kafa, göz, diş, saç, sakal ve ten oyunun kendi ağları ve dokuları. Aşağıdan yüzü, ten tonunu, saçı, saç rengini ve sakalı değiştir; Cranium Hub aynı kafayı 646 kontrolle şekillendirir.',"The game's generic (non-scanned) face presets — head, eyes, teeth, hair, beard and skin are the game's own meshes and textures. Change the face, skin tone, hair, hair colour and beard below; Cranium Hub shapes the same head with 646 controls."],
+      src:'cranium fullhead · generichair · facialhair',hub:['Cranium Hub, Görünüm','Cranium Hub, Appearance']},
     ball:{ic:'ball',lb:['Toplar','Balls'],tag:['League · Tournament Hub','League · Tournament Hub'],t:['Maç topları','Match balls'],
       d:['League ve Tournament Hub turnuva, final ve kış topunu oyunun kendi top modelleri ve dokularıyla gösterir. Üstten topu değiştir.','League and Tournament Hub show the match, final and winter balls with the game\'s own ball models and textures. Switch the ball at the top.'],
-      src:'content/character/ball/…',hub:['Turnuva topu','Competition ball']},
-    face:{ic:'face',lb:['Yüz','Face'],tag:['Cranium Hub · Görünüm','Cranium Hub · Appearance'],t:['Jenerik yüz','Generic face'],
-      d:['Oyunun jenerik (gerçek olmayan) yüz ön ayarlarından biri — kafa, göz, diş, saç ve ten oyunun kendi ağları ve dokuları. Cranium Hub bu kafayı 646 kontrolle şekillendirir, istersen bir fotoğraftan.','One of the game\'s generic (non-scanned) face presets — head, eyes, teeth, hair and skin are the game\'s own meshes and textures. Cranium Hub shapes this head with 646 controls, even from a photo.'],
-      src:'cranium fullhead 1007 · generichair/hairgen_105',hub:['Cranium Hub, Görünüm','Cranium Hub, Appearance']},
-    trophy:{ic:'trophy',lb:['Kupa','Trophy'],tag:['League · Tournament Hub → Asset','League · Tournament Hub → Asset'],t:['Kupa','Trophy'],
-      d:['Lig ve turnuvaların kupaları Asset sekmesinde, kaidede döndürülebilir 3D sahnede. Kupa seçici oyundaki bütün kupaları listeler.','League and tournament trophies stand on a turntable in the Asset tab, and the trophy picker lists every trophy in the game.'],
-      src:'content/worlds/trophy/trophy_22',hub:['Asset sekmesi','Asset tab']},
-    stadium:{ic:'stadium',lb:['Stadyum','Stadium'],tag:['Stadium Hub → Yayın','Stadium Hub → Broadcast'],t:['Stadyum','Stadium'],
-      d:['Stadium Hub yayın kamerasını stadyumun oyundaki gerçek modeli üzerinde gösterir: tribünler, çatı, tünel ve korkuluklar. Burada oyunun genel bir İngiliz stadyumu.',"Stadium Hub shows the broadcast camera on the stadium's real in-game model: stands, roof, tunnel and railings. Here, one of the game's generic British grounds."],
-      src:'stadiums/generic_british_small',hub:['Yayın kamerası','Broadcast camera']},
+      src:'',hub:['Turnuva topu','Competition ball']},
+    trophy:{ic:'trophy',lb:['Kupalar','Trophies'],tag:['League · Tournament Hub → Asset','League · Tournament Hub → Asset'],t:['Kupalar','Trophies'],
+      d:['Lig ve turnuvaların kupaları Asset sekmesinde, kaidede döndürülebilir 3D sahnede. Kupa seçici oyundaki bütün kupaları listeler — üstten birini seç.','League and tournament trophies stand on a turntable in the Asset tab, and the trophy picker lists every trophy in the game — pick one at the top.'],
+      src:'',hub:['Asset sekmesi','Asset tab']},
+    stadium:{ic:'stadium',lb:['Stadyumlar','Stadiums'],tag:['Stadium Hub → Yayın','Stadium Hub → Broadcast'],t:['Stadyumlar','Stadiums'],
+      d:['Stadium Hub yayın kamerasını stadyumun oyundaki gerçek modeli üzerinde gösterir: tribünler, çatı, tünel ve korkuluklar. Burada oyunun genel stadyumları — üstten değiştir.',"Stadium Hub shows the broadcast camera on the stadium's real in-game model: stands, roof, tunnel and railings. Here, the game's generic grounds — switch at the top."],
+      src:'',hub:['Yayın kamerası','Broadcast camera']},
   };
+  // görünüm seçenekleri
+  const LK={
+    face:[['1007',['Yüz 1','Face 1']],['1003',['Yüz 2','Face 2']],['1010',['Yüz 3','Face 3']],['1005',['Yüz 4','Face 4']]],
+    tone:[[2,'#e6b99b'],[4,'#c9946f'],[7,'#8d5b3d'],[9,'#4f3122']],
+    hair:[['1065',['Kısa','Crop']],['1080',['Dalgalı','Textured']],['1090',['Perçemli','Fringe']],['104',['Dağınık','Messy']],['110',['Örgü','Twists']],['100',['Uzun','Long']],['1',['Kazınmış','Buzz']],['0',['Yok','None']]],
+    hairColor:[['#1c1510',['Siyah','Black']],['#4a2e1c',['Kahve','Brown']],['#8a5a2b',['Kumral','Light brown']],['#c79a55',['Sarı','Blond']],['#8e3b1f',['Kızıl','Red']],['#b9b4ae',['Gri','Grey']]],
+    beard:[['0',['Yok','None']],['102',['Bıyık','Moustache']],['111',['Sakal','Beard']],['101',['Çene','Chin']],['100',['Uzun','Full']]],
+  };
+  const sel={ball:'b6',trophy:'t1507',stadium:'s_bl'};
   const kitBtns=(host,api)=>{host.innerHTML=K.map(([k,l],i)=>`<button type="button" class="chip${i?'':' on'}" data-k="${k}">${P(l)}</button>`).join('');
     host.querySelectorAll('button').forEach(b=>b.onclick=()=>{host.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));api.kit(b.dataset.k);});};
   const lazy=(el,fn)=>{const o=new IntersectionObserver(es=>{if(es[0].isIntersecting){o.disconnect();fn();}},{rootMargin:'300px'});o.observe(el);};
-  // hero
   const hs=$('#heroStage');
   let hero=null;
   const heroInit=()=>{hero=ATShow.create(hs,{mode:'hero',model:'player'});kitBtns($('#heroKits'),hero);};
-  // vitrin
-  const ss=$('#showStage'),rail=$('#showRail'),card=$('#vCard'),kits=$('#showKits'),ballsEl=$('#showBalls');
-  let show=null,cur='player',ball='b6';
-  const BALLS=[['b6','FC Volt'],['b18','FC Blue'],['b10','EA Red'],['b12','EA Yellow'],['b0','FC Navy'],['ball',['Klasik','Classic']],['classic',['Deri','Leather']]];
-  const ballBtns=()=>{ballsEl.innerHTML=BALLS.map(([k,l])=>`<button type="button" class="chip${k===ball?' on':''}" data-b="${k}">${P(l)}</button>`).join('');
-    ballsEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{ball=b.dataset.b;ballsEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
-      $('#vCard dd').textContent='content/character/ball/'+(ball==='ball'?'ball_16':ball==='classic'?'ball_2':'ball_'+ball.slice(1));if(show)show.show(ball);});};
+  const ss=$('#showStage'),rail=$('#showRail'),card=$('#vCard'),kits=$('#showKits'),varEl=$('#showBalls'),lookEl=$('#lookCard');
+  let show=null,cur='player';
+  const look={face:'1007',tone:4,hair:'1065',hairColor:'#1c1510',beard:'0'};
+  const model=k=>V[k]?sel[k]:k;
+  const srcOf=k=>V[k]?SRC[k]+(V[k].find(x=>x[0]===sel[k])||[])[2]:M[k].src;
   const info=()=>{const m=M[cur];
     card.innerHTML=`<span class="tag" lang="en">${svg(m.ic)} ${P(m.tag)}</span><h3>${P(m.t)}</h3><p>${P(m.d)}</p>
-      <dl><div><dt>${L('Kaynak','Source')}</dt><dd>${m.src}</dd></div><div><dt>${L('Programda','In the app')}</dt><dd>${P(m.hub)}</dd></div></dl>`;
-    $('#showPoster').style.backgroundImage=`url(assets/models/poster-${cur==='face'?'face':cur==='ball'?'ball':cur}.png)`;};
+      <dl><div><dt>${L('Kaynak','Source')}</dt><dd>${srcOf(cur)}</dd></div><div><dt>${L('Programda','In the app')}</dt><dd>${P(m.hub)}</dd></div></dl>`;
+    $('#showPoster').style.backgroundImage=`url(assets/models/poster-${cur}.png)`;};
+  const varBtns=()=>{const vs=V[cur];varEl.style.display=vs?'':'none';if(!vs)return;
+    varEl.innerHTML=vs.map(([k,l])=>`<button type="button" class="chip${k===sel[cur]?' on':''}" data-v="${k}">${P(l)}</button>`).join('');
+    varEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{sel[cur]=b.dataset.v;varEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+      const dd=$('#vCard dd');if(dd)dd.textContent=srcOf(cur);if(show)show.show(sel[cur]);});};
+  const lookDraw=()=>{const on=cur==='player'||cur==='face';lookEl.style.display=on?'':'none';if(!on)return;
+    const row=(k,lab,items,sw)=>`<div class="lrow"><span class="ll">${P(lab)}</span><div class="lch">${items.map(([v,l])=>sw
+      ?`<button type="button" class="sw${String(v)===String(look[k])?' on':''}" data-l="${k}" data-v="${v}" style="--c:${k==='tone'?l:v}" aria-label="${k==='tone'?v:P(l)}" title="${k==='tone'?'':P(l)}"></button>`
+      :`<button type="button" class="chip${String(v)===String(look[k])?' on':''}" data-l="${k}" data-v="${v}">${P(l)}</button>`).join('')}</div></div>`;
+    lookEl.innerHTML=`<span class="tag" lang="en">${svg('face')} Cranium · ${L('Görünüm','Appearance')}</span>`+
+      row('face',['Yüz','Face'],LK.face)+row('tone',['Ten','Skin'],LK.tone,1)+row('hair',['Saç','Hair'],LK.hair)+row('hairColor',['Saç rengi','Hair colour'],LK.hairColor,1)+row('beard',['Sakal','Beard'],LK.beard);
+    lookEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.l;let v=b.dataset.v;if(k==='tone')v=+v;look[k]=v;
+      lookEl.querySelectorAll(`[data-l="${k}"]`).forEach(x=>x.classList.toggle('on',x===b));
+      if(show)show.look({[k]:v});});};
   const railDraw=()=>{rail.innerHTML=Object.entries(M).map(([k,m])=>`<button type="button" class="${k===cur?'on':''}" data-m="${k}" aria-label="${P(m.lb)}">${svg(m.ic)}<span>${P(m.lb)}</span></button>`).join('');
     rail.querySelectorAll('button').forEach(b=>b.onclick=()=>pick(b.dataset.m));};
   const pick=k=>{cur=k;rail.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===k));
-    kits.style.display=(k==='player'||k==='face')?'':'none';ballsEl.style.display=k==='ball'?'':'none';
-    ss.closest('.viewer').dataset.m=k;info();if(k==='ball')$('#vCard dd').textContent='content/character/ball/'+(ball==='ball'?'ball_16':ball==='classic'?'ball_2':'ball_'+ball.slice(1));
-    if(show)show.show(k==='ball'?ball:k);};
-  const showInit=()=>{show=ATShow.create(ss,{mode:'show',model:cur});kitBtns(kits,show);
+    kits.style.display=(k==='player'||k==='face')?'':'none';
+    ss.closest('.viewer').dataset.m=k;info();varBtns();lookDraw();
+    if(show)show.show(model(k));};
+  const showInit=()=>{show=ATShow.create(ss,{mode:'show',model:model(cur),look});kitBtns(kits,show);
     $('#zIn').onclick=()=>show.zoom(1);$('#zOut').onclick=()=>show.zoom(-1);};
-  renders.push(()=>{railDraw();info();ballBtns();if(cur==='ball')$('#vCard dd').textContent='content/character/ball/'+(ball==='ball'?'ball_16':ball==='classic'?'ball_2':'ball_'+ball.slice(1));
+  renders.push(()=>{railDraw();info();varBtns();lookDraw();
     [['#heroKits',hero],['#showKits',show]].forEach(([s,api])=>{const h=$(s),on=h.querySelector('.on');const k=on?on.dataset.k:'home';
       if(api){kitBtns(h,api);h.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));}
       else h.querySelectorAll('button').forEach(b=>{const l=K.find(x=>x[0]===b.dataset.k);b.textContent=P(l[1]);});});});

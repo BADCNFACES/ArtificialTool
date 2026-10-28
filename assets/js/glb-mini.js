@@ -88,7 +88,13 @@
         mat.normalScale = new THREE.Vector2(s, -s);
       }
       mat.userData = ex;
-      if (m.alphaMode === "MASK") { mat.envMapIntensity = 0.12; mat.roughness = 1; mat.color.multiplyScalar(0.6); }   // saç kartları parlamasın
+      if (m.alphaMode === "MASK") {   // saç kartları: parlamasın, tuvalde yarı saydam kalmasın
+        mat.envMapIntensity = 0.12; mat.roughness = 1; mat.color.multiplyScalar(0.6);
+        mat.onBeforeCompile = (sh) => {
+          sh.fragmentShader = sh.fragmentShader.replace("#include <alphatest_fragment>",
+            "#include <alphatest_fragment>\n\tdiffuseColor.a = 1.0;");
+        };
+      }
       mats.push(mat);
     }
     const root = new THREE.Group();
