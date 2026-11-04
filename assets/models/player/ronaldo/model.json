@@ -1,0 +1,33 @@
+{
+ "glb": "model.glb",
+ "parts": {
+  "head": {
+   "map": "face.jpg",
+   "color": "#c99a7f",
+   "roughness": 0.6
+  },
+  "eyes": {
+   "map": "eye.jpg",
+   "color": "#e9e6e1",
+   "roughness": 0.25
+  },
+  "haircap": {
+   "map": "hair.jpg",
+   "color": "#2a211d",
+   "roughness": 0.7,
+   "side": "double",
+   "alphaMap": "haircap_alpha.png",
+   "alphaUV": 1,
+   "alphaTest": 0.25
+  },
+  "hair": {
+   "map": "hair.jpg",
+   "color": "#2a211d",
+   "roughness": 0.7,
+   "side": "double",
+   "alphaMap": "hair_alpha.png",
+   "alphaUV": 1,
+   "alphaTest": 0.25
+  }
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "glb": "model.glb",
+ "parts": {
+  "trophy_epl_mat": {
+   "map": null,
+   "color": "#d8d8de",
+   "metalness": 0.9,
+   "roughness": 0.28
+  },
+  "trophy_ribbon_colored_mat": {
+   "color": "#5b2a86",
+   "roughness": 0.55
+  }
+ }
+}

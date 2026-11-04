@@ -1,0 +1,10 @@
+{
+ "glb": "model.glb",
+ "parts": {
+  "ball_mat": {
+   "map": "ball.jpg",
+   "color": "#f2f2f2",
+   "roughness": 0.45
+  }
+ }
+}

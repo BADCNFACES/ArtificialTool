@@ -1,0 +1,11 @@
+{
+ "glb": "model.glb",
+ "parts": {
+  "trophy_metal_mat": {
+   "map": null,
+   "color": "#d8d8de",
+   "metalness": 0.9,
+   "roughness": 0.28
+  }
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "glb": "model.glb",
+ "parts": {
+  "jersey": {
+   "map": "jersey.jpg",
+   "color": "#dddddd",
+   "roughness": 0.8,
+   "side": "double"
+  },
+  "shorts": {
+   "map": "shorts.jpg",
+   "color": "#dddddd",
+   "roughness": 0.8,
+   "side": "double"
+  },
+  "socks": {
+   "map": "socks.jpg",
+   "color": "#dddddd",
+   "roughness": 0.8,
+   "side": "double"
+  }
+ }
+}
