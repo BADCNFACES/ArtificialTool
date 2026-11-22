@@ -246,10 +246,11 @@
   // Buy Me a Coffee "Welcome note" bağlantısı: ?plan=lite|standard|ultimate[&renew=1]#talep
   function fromWelcome() {
     const q = new URLSearchParams(location.search), plan = (q.get("plan") || "").toLowerCase();
-    if (!["lite", "standard", "ultimate"].includes(plan)) return;
-    const r = $(`#req-form input[name=edition][value=${plan}]`);
+    const renew = q.get("renew") === "1";
+    if (!["lite", "standard", "ultimate"].includes(plan) && !renew) return;
+    const r = plan && $(`#req-form input[name=edition][value=${plan}]`);
     if (r && !r.disabled) r.checked = true;
-    if (q.get("renew") === "1") { const k = $("#req-form input[name=kind][value=renew]"); if (k) k.checked = true; }
+    if (renew) { const k = $("#req-form input[name=kind][value=renew]"); if (k) k.checked = true; }
     togglePayer();
     const msg = $("#form-msg"); if (msg) { msg.className = "form-msg ok"; msg.textContent = t("f.welcome"); }
     setTimeout(() => { const s = $("#talep"); if (s) s.scrollIntoView({behavior: "smooth", block: "start"}); }, 400);
