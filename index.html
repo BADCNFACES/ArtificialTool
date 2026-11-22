@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=7">
+<link rel="stylesheet" href="assets/css/site.css?v=8">
 <script type="importmap">
 {"imports":{
   "three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
@@ -267,6 +267,8 @@
           <input class="in" id="payer" name="payer" autocomplete="name" maxlength="80"><small data-i18n="f.payerHint">Ödeme yaparken görünen ad. Anonim ödediysen "anonim" yaz ve referansı ekle.</small></div>
         <div class="f"><label for="email"><span data-i18n="f.email">E-posta adresin</span> <i>*</i></label><input class="in" id="email" name="email" type="email" autocomplete="email" maxlength="120"></div>
         <div class="f"><label for="email2"><span data-i18n="f.email2">E-posta (tekrar)</span> <i>*</i></label><input class="in" id="email2" type="email" autocomplete="off" maxlength="120"></div>
+        <div class="f full"><label for="bmc_email" data-i18n="f.bmcEmail">Buy Me a Coffee e-postan</label>
+          <input class="in" id="bmc_email" name="bmc_email" type="email" autocomplete="off" maxlength="120"><small data-i18n="f.bmcEmailHint">Ödemede kullandığın e-posta. Ödeme gelince anahtarın otomatik açılır. Yukarıdakiyle aynıysa boş bırak.</small></div>
         <div class="f"><label for="ref" data-i18n="f.ref">Ödeme referansı</label><input class="in" id="ref" name="ref" maxlength="120"></div>
         <div class="f"><label for="discord" data-i18n="f.discord">Discord adın</label><input class="in" id="discord" name="discord" maxlength="60"></div>
         <div class="f full"><label for="note" data-i18n="f.note">Not</label><textarea class="in" id="note" name="note" maxlength="1000"></textarea></div>
@@ -324,9 +326,9 @@
   <div><img id="lb-img" alt=""><p id="lb-cap"></p></div>
 </div>
 
-<script src="assets/js/config.js?v=7"></script>
-<script src="assets/js/i18n.js?v=7"></script>
-<script src="assets/js/site.js?v=7"></script>
-<script type="module" src="assets/js/viewer.js?v=7"></script>
+<script src="assets/js/config.js?v=8"></script>
+<script src="assets/js/i18n.js?v=8"></script>
+<script src="assets/js/site.js?v=8"></script>
+<script type="module" src="assets/js/viewer.js?v=8"></script>
 </body>
 </html>

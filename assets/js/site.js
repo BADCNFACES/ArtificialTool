@@ -270,6 +270,8 @@
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return err("BAD_EMAIL");
       if (email.toLowerCase() !== email2.toLowerCase()) return err("MISMATCH");
       if (!payer) return err("NO_PAYER");
+      const bmc_email = ($("#bmc_email") ? $("#bmc_email").value.trim() : "");
+      if (bmc_email && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(bmc_email)) return err("BAD_BMC_EMAIL");
       const renew = kind() === "renew" ? $("#renew_key").value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
       if (kind() === "renew" && renew.length !== 20) return err("BAD_KEY");
       const renew_key = renew ? renew.match(/.{5}/g).join("-") : "";
@@ -279,7 +281,7 @@
         const res = await fetch((S.api || "").replace(/\/+$/, "") + "/v1/request", {
           method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"},
           body: JSON.stringify({edition: ed, email, payer, ref: $("#ref").value.trim(), discord: $("#discord").value.trim(),
-            note: $("#note").value.trim(), lang, website: f.website.value, renew_key})});
+            note: $("#note").value.trim(), lang, website: f.website.value, renew_key, bmc_email})});
         const r = await res.json();
         if (!r.ok) throw new Error(r.error || "GENERIC");
         f.innerHTML = `<div class="done"><span class="pill"><b>OK</b>${esc(t("f.okTitle"))}</span><b class="grad-text mono">${esc(r.code)}</b><p class="muted">${esc(t("f.okText"))}</p></div>`;

@@ -1267,3 +1267,15 @@ Object.assign(I18N.ar, {"shots.lead": "لقطات من Artificial Tool. انقر
     if (Array.isArray(I18N[k].faq) && sub && !I18N[k].faq.some(q => q[0] === sub[0])) I18N[k].faq.unshift(sub);
   });
 })();
+
+/* ---- Buy Me a Coffee e-postası (otomatik onay) ---- */
+Object.assign(I18N.tr, {"f.bmcEmail": "Buy Me a Coffee e-postan", "f.bmcEmailHint": "Ödemede kullandığın e-posta. Ödeme gelince anahtarın otomatik açılır. Yukarıdakiyle aynıysa boş bırak.", "err.BAD_BMC_EMAIL": "Buy Me a Coffee e-postanı doğru yaz."});
+Object.assign(I18N.en, {"f.bmcEmail": "Your Buy Me a Coffee e-mail", "f.bmcEmailHint": "The e-mail you paid with. Your key switches on automatically when the payment arrives. Leave empty if it's the same as above.", "err.BAD_BMC_EMAIL": "Enter a valid Buy Me a Coffee e-mail."});
+Object.assign(I18N.es, {"f.bmcEmail": "Tu correo de Buy Me a Coffee", "f.bmcEmailHint": "El correo con el que pagaste. Tu clave se activa automáticamente cuando llega el pago. Déjalo vacío si es el mismo de arriba.", "err.BAD_BMC_EMAIL": "Introduce un correo de Buy Me a Coffee válido."});
+Object.assign(I18N.de, {"f.bmcEmail": "Deine Buy Me a Coffee-E-Mail", "f.bmcEmailHint": "Die E-Mail, mit der du bezahlt hast. Dein Schlüssel wird automatisch aktiviert, sobald die Zahlung eingeht. Leer lassen, wenn sie mit der oberen übereinstimmt.", "err.BAD_BMC_EMAIL": "Gib eine gültige Buy Me a Coffee-E-Mail ein."});
+Object.assign(I18N.fr, {"f.bmcEmail": "Votre e-mail Buy Me a Coffee", "f.bmcEmailHint": "L'e-mail utilisé pour payer. Votre clé s'active automatiquement à réception du paiement. Laissez vide s'il est identique à celui du dessus.", "err.BAD_BMC_EMAIL": "Saisissez un e-mail Buy Me a Coffee valide."});
+Object.assign(I18N.it, {"f.bmcEmail": "La tua e-mail di Buy Me a Coffee", "f.bmcEmailHint": "L'e-mail con cui hai pagato. La chiave si attiva automaticamente quando arriva il pagamento. Lascia vuoto se è la stessa di sopra.", "err.BAD_BMC_EMAIL": "Inserisci un'e-mail di Buy Me a Coffee valida."});
+Object.assign(I18N.pt, {"f.bmcEmail": "Seu e-mail do Buy Me a Coffee", "f.bmcEmailHint": "O e-mail usado no pagamento. Sua chave é ativada automaticamente quando o pagamento chega. Deixe vazio se for o mesmo de cima.", "err.BAD_BMC_EMAIL": "Informe um e-mail do Buy Me a Coffee válido."});
+Object.assign(I18N.nl, {"f.bmcEmail": "Je Buy Me a Coffee-e-mailadres", "f.bmcEmailHint": "Het e-mailadres waarmee je betaalde. Je sleutel wordt automatisch geactiveerd zodra de betaling binnenkomt. Laat leeg als het hetzelfde is als hierboven.", "err.BAD_BMC_EMAIL": "Voer een geldig Buy Me a Coffee-e-mailadres in."});
+Object.assign(I18N.pl, {"f.bmcEmail": "Twój e-mail w Buy Me a Coffee", "f.bmcEmailHint": "E-mail użyty przy płatności. Klucz włączy się automatycznie po wpłynięciu płatności. Zostaw puste, jeśli jest taki sam jak powyżej.", "err.BAD_BMC_EMAIL": "Podaj prawidłowy e-mail z Buy Me a Coffee."});
+Object.assign(I18N.ar, {"f.bmcEmail": "بريدك في Buy Me a Coffee", "f.bmcEmailHint": "البريد الذي دفعت به. يُفعَّل مفتاحك تلقائيًا عند وصول الدفعة. اتركه فارغًا إن كان مطابقًا للبريد أعلاه.", "err.BAD_BMC_EMAIL": "أدخل بريد Buy Me a Coffee صالحًا."});
