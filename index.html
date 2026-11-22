@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=8">
+<link rel="stylesheet" href="assets/css/site.css?v=9">
 <script type="importmap">
 {"imports":{
   "three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
@@ -260,9 +260,10 @@
           <div class="eds eds2">
             <label><input type="radio" name="kind" value="new" checked><span><b data-i18n="f.new">Yeni lisans</b></span></label>
             <label><input type="radio" name="kind" value="renew"><span><b data-i18n="f.renew">Yenileme (anahtarım var)</b></span></label>
+            <label><input type="radio" name="kind" value="upgrade"><span><b data-i18n="f.upgrade">Sürüm yükselt</b></span></label>
           </div></div>
         <div class="f full" id="f-renew" style="display:none"><label for="renew_key"><span data-i18n="f.renewKey">Lisans anahtarın</span> <i>*</i></label>
-          <input class="in mono" id="renew_key" name="renew_key" autocomplete="off" maxlength="29" placeholder="XXXXX-XXXXX-XXXXX-XXXXX"><small data-i18n="f.renewHint">Süresi uzatılacak anahtar.</small></div>
+          <input class="in mono" id="renew_key" name="renew_key" autocomplete="off" maxlength="29" placeholder="XXXXX-XXXXX-XXXXX-XXXXX"><small id="renew_hint" data-i18n="f.renewHint">Süresi uzatılacak anahtar.</small></div>
         <div class="f full" id="f-payer"><label for="payer"><span data-i18n="f.payer">Buy Me a Coffee adın</span> <i>*</i></label>
           <input class="in" id="payer" name="payer" autocomplete="name" maxlength="80"><small data-i18n="f.payerHint">Ödeme yaparken görünen ad. Anonim ödediysen "anonim" yaz ve referansı ekle.</small></div>
         <div class="f"><label for="email"><span data-i18n="f.email">E-posta adresin</span> <i>*</i></label><input class="in" id="email" name="email" type="email" autocomplete="email" maxlength="120"></div>
@@ -326,9 +327,9 @@
   <div><img id="lb-img" alt=""><p id="lb-cap"></p></div>
 </div>
 
-<script src="assets/js/config.js?v=8"></script>
-<script src="assets/js/i18n.js?v=8"></script>
-<script src="assets/js/site.js?v=8"></script>
-<script type="module" src="assets/js/viewer.js?v=8"></script>
+<script src="assets/js/config.js?v=9"></script>
+<script src="assets/js/i18n.js?v=9"></script>
+<script src="assets/js/site.js?v=9"></script>
+<script type="module" src="assets/js/viewer.js?v=9"></script>
 </body>
 </html>

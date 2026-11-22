@@ -242,15 +242,21 @@
   // ------------------------------------------------------------ talep formu
   function edition() { const r = $("#req-form input[name=edition]:checked"); return r ? r.value : "ultimate"; }
   function kind() { const r = $("#req-form input[name=kind]:checked"); return r ? r.value : "new"; }
-  function togglePayer() { const f = $("#f-renew"); if (f) f.style.display = kind() === "renew" ? "" : "none"; }
+  function needsKey() { return kind() === "renew" || kind() === "upgrade"; }
+  function togglePayer() {
+    const f = $("#f-renew"); if (f) f.style.display = needsKey() ? "" : "none";
+    const h = $("#renew_hint");
+    if (h) { const k = kind() === "upgrade" ? "f.upgradeHint" : "f.renewHint"; h.setAttribute("data-i18n", k); h.textContent = t(k) || h.textContent; }
+  }
   // Buy Me a Coffee "Welcome note" bağlantısı: ?plan=lite|standard|ultimate[&renew=1]#talep
   function fromWelcome() {
     const q = new URLSearchParams(location.search), plan = (q.get("plan") || "").toLowerCase();
     const renew = q.get("renew") === "1";
-    if (!["lite", "standard", "ultimate"].includes(plan) && !renew) return;
+    if (!["lite", "standard", "ultimate"].includes(plan) && !renew && q.get("upgrade") !== "1") return;
     const r = plan && $(`#req-form input[name=edition][value=${plan}]`);
     if (r && !r.disabled) r.checked = true;
-    if (renew) { const k = $("#req-form input[name=kind][value=renew]"); if (k) k.checked = true; }
+    const up = q.get("upgrade") === "1";
+    if (renew || up) { const k = $(`#req-form input[name=kind][value=${up ? "upgrade" : "renew"}]`); if (k) k.checked = true; }
     togglePayer();
     const msg = $("#form-msg"); if (msg) { msg.className = "form-msg ok"; msg.textContent = t("f.welcome"); }
     setTimeout(() => { const s = $("#talep"); if (s) s.scrollIntoView({behavior: "smooth", block: "start"}); }, 400);
@@ -272,16 +278,17 @@
       if (!payer) return err("NO_PAYER");
       const bmc_email = ($("#bmc_email") ? $("#bmc_email").value.trim() : "");
       if (bmc_email && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(bmc_email)) return err("BAD_BMC_EMAIL");
-      const renew = kind() === "renew" ? $("#renew_key").value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
-      if (kind() === "renew" && renew.length !== 20) return err("BAD_KEY");
+      const renew = needsKey() ? $("#renew_key").value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
+      if (needsKey() && renew.length !== 20) return err("BAD_KEY");
       const renew_key = renew ? renew.match(/.{5}/g).join("-") : "";
+      const upgrade = kind() === "upgrade";
       if (!$("#consent").checked) return err("CONSENT");
       send.disabled = true; send.querySelector("span").textContent = t("f.sending");
       try {
         const res = await fetch((S.api || "").replace(/\/+$/, "") + "/v1/request", {
           method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"},
           body: JSON.stringify({edition: ed, email, payer, ref: $("#ref").value.trim(), discord: $("#discord").value.trim(),
-            note: $("#note").value.trim(), lang, website: f.website.value, renew_key, bmc_email})});
+            note: $("#note").value.trim(), lang, website: f.website.value, renew_key, upgrade, bmc_email})});
         const r = await res.json();
         if (!r.ok) throw new Error(r.error || "GENERIC");
         f.innerHTML = `<div class="done"><span class="pill"><b>OK</b>${esc(t("f.okTitle"))}</span><b class="grad-text mono">${esc(r.code)}</b><p class="muted">${esc(t("f.okText"))}</p></div>`;

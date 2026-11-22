@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="tr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artificial Tool — EA Sports FC 27 kadro, forma, stadyum ve yüz editörü</title>
+<meta name="description" content="Artificial Tool: EA Sports FC 27 için kadro, forma, stadyum ve yüz editörü. Oyunun kendi 3D modelleriyle, 10 dilde, otomatik güncellenen launcher ile.">
+<link rel="canonical" href="https://www.artificialtool.org/">
+<meta property="og:title" content="Artificial Tool">
+<meta property="og:description" content="EA Sports FC 27 için kadro, forma, stadyum ve yüz editörü — oyunun kendi 3D modelleriyle.">
+<meta property="og:image" content="https://www.artificialtool.org/assets/screens/1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0B0E">
+<link rel="icon" type="image/png" href="assets/site/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v=8">
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<div class="bg-fx" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 8.5-8.5M16.5 6.5 19 9"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></symbol>
+<symbol id="i-launch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M21 3v6h-6"/><path d="m21 3-9 9"/></symbol>
+<symbol id="i-live" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M8 12a4 4 0 0 1 8 0"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 14v7"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9h8M8 12h5"/></symbol>
+<symbol id="i-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c4.4 0 7 3.4 7 8s-3 10-7 10-7-5.4-7-10 2.6-8 7-8Z"/><path d="M9 11h.01M15 11h.01M9.5 16c1.5 1 3.5 1 5 0"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13l-3-3M20 17H7l3 3"/></symbol>
+<symbol id="i-kit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M8 3 3 6l2 5 2-1v11h10V10l2 1 2-5-5-3a4 4 0 0 1-8 0Z"/></symbol>
+<symbol id="i-stad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><ellipse cx="12" cy="13" rx="9" ry="5"/><path d="M3 13v3c0 2.8 4 5 9 5s9-2.2 9-5v-3M6 4v6M18 4v6"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+</defs></svg>
+
+<!-- ============================================================ üst çubuk -->
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Artificial Tool"><img src="assets/site/logo.png" alt=""><b>artiFiCial</b></a>
+    <nav class="nav" id="nav">
+      <a href="#video" data-i18n="nav.video">Video</a>
+      <a href="#vitrin" data-i18n="nav.3d">3D vitrin</a>
+      <a href="#yenilikler" data-i18n="nav.feat">Yenilikler</a>
+      <a href="#hublar" data-i18n="nav.hubs">Hub'lar</a>
+      <a href="#goruntuler" data-i18n="nav.shots">Görüntüler</a>
+      <a href="#surumler" data-i18n="nav.plans">Sürümler</a>
+      <a href="#sss" data-i18n="nav.faq">SSS</a>
+    </nav>
+    <div class="top-acts">
+      <div class="lang" id="lang">
+        <button type="button" aria-haspopup="listbox" aria-expanded="false"><svg><use href="#i-globe"/></svg><span id="lang-cur">TR</span></button>
+        <ul role="listbox" id="lang-list"></ul>
+      </div>
+      <a class="btn pri sm" href="#talep" data-i18n="cta.buy">Lisans al</a>
+      <button class="menu-btn" id="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<!-- ============================================================ hero -->
+<section class="hero" style="padding-top:64px">
+  <div class="wrap">
+    <div class="rv">
+      <span class="pill"><b data-i18n="hero.pillTag">Yeni</b><span data-i18n="hero.pill">Launcher · otomatik güncelleme · geri bildirim</span></span>
+      <h1 class="h-display">
+        <span data-i18n="hero.l1">Kadro</span>
+        <span data-i18n="hero.l2">Forma</span>
+        <span data-i18n="hero.l3">Stadyum</span>
+        <span data-i18n="hero.l4">Yüz</span>
+      </h1>
+      <p class="lead" data-i18n="hero.lead">EA Sports FC 27 kadro dosyalarını lig, takım, oyuncu, forma, stadyum ve yüz hub'larıyla düzenle. Oyunun kendi 3D modelleri, kurulu oyundan canlı okunur.</p>
+      <div class="cta">
+        <a class="btn pri" id="dl-btn" href="#talep"><svg><use href="#i-dl"/></svg><span data-i18n="cta.download">Launcher'ı indir</span></a>
+        <a class="btn" href="#video"><svg><use href="#i-play"/></svg><span data-i18n="cta.watch">Tanıtımı izle</span></a>
+      </div>
+      <div class="facts">
+        <span data-i18n="fact.win">Windows 10 / 11 · 64-bit</span>
+        <span data-i18n="fact.fc">EA Sports FC 27</span>
+        <span data-i18n="fact.lang">10 arayüz dili</span>
+        <span data-i18n="fact.update">Otomatik güncelleme</span>
+      </div>
+    </div>
+    <div class="hero-side rv" id="video">
+      <div class="video" id="video-box">
+        <div class="soon" id="video-soon"><div><b data-i18n="video.soon">Tanıtım videosu</b><span data-i18n="video.soonSub">Çok yakında burada.</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="stats rv">
+      <div><b>20</b><span data-i18n="stat.hubs">hub, tek programda</span></div>
+      <div><b>3D</b><span data-i18n="stat.live">oyunun kendi modelleri, canlı</span></div>
+      <div><b>10</b><span data-i18n="stat.lang">arayüz dili</span></div>
+      <div><b class="grad-text">1</b><span data-i18n="stat.key">anahtar · launcher her şeyi kurar</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 3D vitrin -->
+<section id="vitrin">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="s3d.no">01 · 3D vitrin</span>
+      <h2 data-i18n="s3d.title">Oyunun kendi modelleri</h2>
+      <p data-i18n="s3d.lead">Hub'larda düzenlerken gördüğün ağlar ve dokular. Sürükle, çevir, yakınlaş — oyuncu, forma, top ve kupa.</p>
+    </div>
+    <div class="stage rv">
+      <div class="tabs" role="tablist" id="tabs">
+        <button role="tab" aria-selected="true" data-tab="player"><i>01</i><span><b data-i18n="tab.player">Oyuncu</b><small data-i18n="tab.playerSub">Yüz, saç, sakal, gövde</small></span></button>
+        <button role="tab" aria-selected="false" data-tab="kit"><i>02</i><span><b data-i18n="tab.kit">Forma</b><small data-i18n="tab.kitSub">Forma, şort, tozluk</small></span></button>
+        <button role="tab" aria-selected="false" data-tab="ball"><i>03</i><span><b data-i18n="tab.ball">Top</b><small data-i18n="tab.ballSub">Lig ve turnuva topları</small></span></button>
+        <button role="tab" aria-selected="false" data-tab="trophy"><i>04</i><span><b data-i18n="tab.trophy">Kupa</b><small data-i18n="tab.trophySub">Lig ve turnuva kupaları</small></span></button>
+      </div>
+      <div class="viewer" id="viewer">
+        <div class="hud"><div class="title"><b id="v-title">Arda Güler</b><span id="v-sub">Yüz, saç, sakal, gövde</span></div><span class="badge">3D · FC 27</span></div>
+        <div class="state" id="v-state"><div><b data-i18n="v.loading">3D yükleniyor</b><div class="bar"><i id="v-bar"></i></div></div></div>
+        <div class="variants" id="v-variants"></div>
+        <div class="hint" data-i18n="v.drag">Çevirmek için sürükle</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ yenilikler -->
+<section id="yenilikler">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="new.no">02 · Yenilikler</span>
+      <h2 data-i18n="new.title">Bu sürümde neler var</h2>
+      <p data-i18n="new.lead">Kurulumdan güncellemeye, oyundan canlı okumadan geri bildirime — Artificial Tool artık tek bir launcher ile çalışıyor.</p>
+    </div>
+    <div class="news">
+      <article class="card feat rv"><span class="new" data-i18n="tag.new">Yeni</span><div class="ico"><svg><use href="#i-launch"/></svg></div><h3 data-i18n="n1.t">Artificial Launcher</h3><p data-i18n="n1.p">Bir kez anahtarınla giriş yap; launcher programı kurar, her açılışta güncelliği denetler, yeni sürümü ve SDK'yı kendiliğinden indirir. Export, mod ve yüz klasörlerin korunur.</p></article>
+      <article class="card feat rv"><span class="new" data-i18n="tag.new">Yeni</span><div class="ico"><svg><use href="#i-live"/></svg></div><h3 data-i18n="n2.t">Oyundan canlı okuma</h3><p data-i18n="n2.p">Formalar, oyuncular, kramponlar, kupalar ve stadyumlar kurulu FC 27'den canlı okunur — büyük veri paketleri yok. Oyun güncellenince yeni SDK launcher ile gelir.</p></article>
+      <article class="card rv"><span class="new" data-i18n="tag.new">Yeni</span><div class="ico"><svg><use href="#i-chat"/></svg></div><h3 data-i18n="n3.t">Geri bildirim</h3><p data-i18n="n3.p">Programın içinden ekran görüntüsü ve video ekleyerek, her birine açıklama yazarak hata ve öneri gönder; doğrudan bize ulaşır.</p></article>
+      <article class="card rv"><div class="ico"><svg><use href="#i-face"/></svg></div><h3 data-i18n="n4.t">ArtFaceial</h3><p data-i18n="n4.p">Birkaç fotoğraftan yeni yüz: doku temizleme, saç uydurma ve FET'e hazır dışa aktarım. Hair Updater ile saçlar oyunun saç kütüphanesinden.</p></article>
+      <article class="card rv"><div class="ico"><svg><use href="#i-swap"/></svg></div><h3 data-i18n="n5.t">Converter</h3><p data-i18n="n5.p">FC 25, FIFA 23 ve eFootball yüzlerini dönüştür; FC 26 ve FC 27 desteğiyle.</p></article>
+      <article class="card rv"><div class="ico"><svg><use href="#i-kit"/></svg></div><h3 data-i18n="n6.t">Kits Hub</h3><p data-i18n="n6.p">3D forma askısı: renkler, numaralar, isimler, tasarım ve armalar; forma numaraları için soyunma odası.</p></article>
+      <article class="card wide rv"><div class="ico"><svg><use href="#i-stad"/></svg></div><h3 data-i18n="n7.t">Stadyum stüdyosu</h3><p data-i18n="n7.p">Yayın kamerası 3D, maç saatleri ve hava, Tifo Studio ile her görselden 3D tifo, Crowd Studio ile koltuk renkleri ve taraftar kartları.</p></article>
+      <article class="card wide rv"><div class="ico"><svg><use href="#i-shield"/></svg></div><h3 data-i18n="n8.t">Güvenli düzenleme</h3><p data-i18n="n8.p">Kaydetmeden önce otomatik yedek, adım adım geri alma, işlem günlüğü ve kadro sağlığı denetimi. Mod paketleri oyun dosyalarına hiç dokunmaz.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ hub'lar -->
+<section id="hublar">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="hubs.no">03 · Hub'lar</span>
+      <h2 data-i18n="hubs.title">Her iş için bir hub</h2>
+      <p data-i18n="hubs.lead">Hepsi aynı kadro dosyası, aynı yedek ve aynı geri alma üzerinde. Etiket, hub'ın hangi sürümle açıldığını gösterir.</p>
+    </div>
+    <div class="filters rv" id="hub-filters">
+      <button aria-pressed="true" data-ed="" data-i18n="filter.all">Tümü</button>
+      <button aria-pressed="false" data-ed="lite">Lite</button>
+      <button aria-pressed="false" data-ed="standard" data-i18n="ed.standard">Standart</button>
+      <button aria-pressed="false" data-ed="ultimate">Ultimate</button>
+    </div>
+    <div class="hubs" id="hubs"></div>
+  </div>
+</section>
+
+<!-- ============================================================ görüntüler -->
+<section id="goruntuler">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="shots.no">04 · Arayüz</span>
+      <h2 data-i18n="shots.title">Programdan görüntüler</h2>
+      <p data-i18n="shots.lead">Artificial Tool'dan kareler. Büyütmek için tıkla.</p>
+    </div>
+    <div class="shots" id="shots"></div>
+    <div class="shots-more"><button type="button" class="btn" id="shots-more" hidden>Daha fazla göster</button></div>
+  </div>
+</section>
+
+<!-- ============================================================ nasıl çalışır -->
+<section id="nasil">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="how.no">05 · Nasıl çalışır</span>
+      <h2 data-i18n="how.title">Dört adımda oyunda</h2>
+      <p data-i18n="how.lead">Kurulum, güncelleme ve SDK launcher'ın işi. Sen kadronu düzenle.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv"><h3 data-i18n="st1.t">Launcher'ı çalıştır</h3><p data-i18n="st1.p">ArtificialLauncher.exe'yi indir, lisans anahtarınla bir kez giriş yap. Program, SDK ve gerekenler kendiliğinden kurulur.</p></div>
+      <div class="step rv"><h3 data-i18n="st2.t">Kadronu aç</h3><p data-i18n="st2.p">FC 27 kadro dosyanı aç; varlıklar kurulu oyundan canlı okunur. Birden çok dosyayla aynı anda çalışabilirsin.</p></div>
+      <div class="step rv"><h3 data-i18n="st3.t">Hub'larda düzenle</h3><p data-i18n="st3.p">Lig, takım, oyuncu, forma, stadyum ve yüz — her biri kendi hub'ında, canlı 3D önizlemeyle.</p></div>
+      <div class="step rv"><h3 data-i18n="st4.t">Kaydet ve oyna</h3><p data-i18n="st4.p">Kaydederken yedek alınır. Yüz, forma ve tifolar mod paketine ya da FIFA Editor Tool'a hazır düşer.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ sürümler -->
+<section id="surumler">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="plans.no">06 · Sürümler</span>
+      <h2 data-i18n="plans.title">Lite, Standart, Ultimate</h2>
+      <p data-i18n="plans.lead">Lite ücretsiz. Standart ve Ultimate için ödeme Buy Me a Coffee üzerinden; ardından kod talebi oluşturursun, anahtarın e-postana gelir.</p>
+    </div>
+    <div class="plans">
+      <div class="plan rv" data-plan="lite">
+        <h3>Lite</h3>
+        <div class="price" data-price="lite"></div>
+        <ul data-list="pl.lite"></ul>
+        <a class="btn" data-bmc="lite" target="_blank" rel="noopener" data-i18n="plan.pay">Buy Me a Coffee ile öde</a>
+        <a class="btn sm" href="#talep" data-pick="lite" data-i18n="plan.paid">Ödedim, kod talep et</a>
+      </div>
+      <div class="plan rv" data-plan="standard">
+        <h3 data-i18n="ed.standard">Standart</h3>
+        <div class="price" data-price="standard"></div>
+        <ul data-list="pl.standard"></ul>
+        <a class="btn" data-bmc="standard" target="_blank" rel="noopener" data-i18n="plan.pay">Buy Me a Coffee ile öde</a>
+        <a class="btn sm" href="#talep" data-pick="standard" data-i18n="plan.paid">Ödedim, kod talep et</a>
+      </div>
+      <div class="plan hot rv" data-plan="ultimate" data-hot="Tam paket">
+        <h3>Ultimate</h3>
+        <div class="price" data-price="ultimate"></div>
+        <ul data-list="pl.ultimate"></ul>
+        <a class="btn pri" data-bmc="ultimate" target="_blank" rel="noopener" data-i18n="plan.pay">Buy Me a Coffee ile öde</a>
+        <a class="btn sm" href="#talep" data-pick="ultimate" data-i18n="plan.paid">Ödedim, kod talep et</a>
+      </div>
+    </div>
+    <p class="plans-note rv" data-i18n="plans.note">Tek cihaz lisansı · üst sürüme geçişte yalnızca fark ödenir · "Yakında" işaretli hub'lar güncellemeyle açılır</p>
+  </div>
+</section>
+
+<!-- ============================================================ kod talebi -->
+<section id="talep">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="req.no">07 · Kod talebi</span>
+      <h2 data-i18n="req.title">Lisans anahtarını al</h2>
+      <p data-i18n="req.lead">Formu doldur; ödemen teyit edilince anahtarın e-posta adresine gönderilir. Lite için ödeme gerekmez.</p>
+    </div>
+    <div class="req">
+      <div class="req-info rv">
+        <div class="s"><b>1</b><div><h4 data-i18n="rs1.t">Sürümünü seç</h4><p data-i18n="rs1.p">Standart ya da Ultimate için Buy Me a Coffee'de karşılığını gönder. Lite ücretsiz; bu adımı atla.</p></div></div>
+        <div class="s"><b>2</b><div><h4 data-i18n="rs2.t">Formu gönder</h4><p data-i18n="rs2.p">E-postan ve (ücretli sürümde) Buy Me a Coffee adınla talebi gönder; ekrandaki talep numarasını sakla.</p></div></div>
+        <div class="s"><b>3</b><div><h4 data-i18n="rs3.t">Anahtarın e-postada</h4><p data-i18n="rs3.p">Ödeme teyit edilince anahtarın aynı adrese gelir; ortalama 24 saat. Launcher'da bu anahtarla giriş yaparsın.</p></div></div>
+      </div>
+      <form class="box rv" id="req-form" novalidate>
+        <div class="f full"><label data-i18n="f.edition">Hangi sürüm?</label>
+          <div class="eds">
+            <label><input type="radio" name="edition" value="lite"><span><b>Lite</b><small data-price-mini="lite"></small></span></label>
+            <label><input type="radio" name="edition" value="standard"><span><b data-i18n="ed.standard">Standart</b><small data-price-mini="standard"></small></span></label>
+            <label><input type="radio" name="edition" value="ultimate" checked><span><b>Ultimate</b><small data-price-mini="ultimate"></small></span></label>
+          </div></div>
+        <div class="f full"><label data-i18n="f.kind">Talep türü</label>
+          <div class="eds eds2">
+            <label><input type="radio" name="kind" value="new" checked><span><b data-i18n="f.new">Yeni lisans</b></span></label>
+            <label><input type="radio" name="kind" value="renew"><span><b data-i18n="f.renew">Yenileme (anahtarım var)</b></span></label>
+          </div></div>
+        <div class="f full" id="f-renew" style="display:none"><label for="renew_key"><span data-i18n="f.renewKey">Lisans anahtarın</span> <i>*</i></label>
+          <input class="in mono" id="renew_key" name="renew_key" autocomplete="off" maxlength="29" placeholder="XXXXX-XXXXX-XXXXX-XXXXX"><small data-i18n="f.renewHint">Süresi uzatılacak anahtar.</small></div>
+        <div class="f full" id="f-payer"><label for="payer"><span data-i18n="f.payer">Buy Me a Coffee adın</span> <i>*</i></label>
+          <input class="in" id="payer" name="payer" autocomplete="name" maxlength="80"><small data-i18n="f.payerHint">Ödeme yaparken görünen ad. Anonim ödediysen "anonim" yaz ve referansı ekle.</small></div>
+        <div class="f"><label for="email"><span data-i18n="f.email">E-posta adresin</span> <i>*</i></label><input class="in" id="email" name="email" type="email" autocomplete="email" maxlength="120"></div>
+        <div class="f"><label for="email2"><span data-i18n="f.email2">E-posta (tekrar)</span> <i>*</i></label><input class="in" id="email2" type="email" autocomplete="off" maxlength="120"></div>
+        <div class="f full"><label for="bmc_email" data-i18n="f.bmcEmail">Buy Me a Coffee e-postan</label>
+          <input class="in" id="bmc_email" name="bmc_email" type="email" autocomplete="off" maxlength="120"><small data-i18n="f.bmcEmailHint">Ödemede kullandığın e-posta. Ödeme gelince anahtarın otomatik açılır. Yukarıdakiyle aynıysa boş bırak.</small></div>
+        <div class="f"><label for="ref" data-i18n="f.ref">Ödeme referansı</label><input class="in" id="ref" name="ref" maxlength="120"></div>
+        <div class="f"><label for="discord" data-i18n="f.discord">Discord adın</label><input class="in" id="discord" name="discord" maxlength="60"></div>
+        <div class="f full"><label for="note" data-i18n="f.note">Not</label><textarea class="in" id="note" name="note" maxlength="1000"></textarea></div>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="check"><input type="checkbox" id="consent"><span data-i18n="f.consent">E-posta adresimi doğru yazdığımı ve anahtarın bu adrese gönderileceğini onaylıyorum.</span></label>
+        <div class="form-msg" id="form-msg" role="status"></div>
+        <div class="f full"><button class="btn pri" type="submit" id="f-send"><svg><use href="#i-key"/></svg><span data-i18n="f.send">Talebi gönder</span></button></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ SSS -->
+<section id="sss">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="no" data-i18n="faq.no">08 · Sorular</span>
+      <h2 data-i18n="faq.title">Sık sorulanlar</h2>
+      <p data-i18n="faq.lead">Cevabını bulamazsan Discord'da sor.</p>
+    </div>
+    <div class="faq" id="faq"></div>
+
+    <div class="final rv">
+      <h2 data-i18n="final.title">Oyununu kur</h2>
+      <p data-i18n="final.lead">#BuildYourGame — Artificial Tool ile kadro, forma, stadyum ve yüz tek yerde.</p>
+      <div class="cta">
+        <a class="btn pri" href="#talep"><svg><use href="#i-key"/></svg><span data-i18n="cta.buy">Lisans al</span></a>
+        <a class="btn" data-link="discord" target="_blank" rel="noopener" data-i18n="cta.discord">Discord'a katıl</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div><a class="brand" href="#top"><img src="assets/site/logo.png" alt=""><b>artiFiCial</b></a>
+        <p style="max-width:360px;margin:14px 0 0" data-i18n="foot.tag">EA Sports FC için kadro, forma, stadyum ve yüz editörü — oyunun kendi 3D modelleriyle.</p></div>
+      <div><h5 data-i18n="foot.program">Program</h5>
+        <a href="#vitrin" data-i18n="nav.3d">3D vitrin</a><a href="#yenilikler" data-i18n="nav.feat">Yenilikler</a><a href="#hublar" data-i18n="nav.hubs">Hub'lar</a><a href="#goruntuler" data-i18n="nav.shots">Görüntüler</a></div>
+      <div><h5 data-i18n="foot.license">Lisans</h5>
+        <a href="#surumler" data-i18n="nav.plans">Sürümler</a><a href="#talep" data-i18n="req.title">Lisans anahtarını al</a><a href="#sss" data-i18n="nav.faq">SSS</a></div>
+      <div><h5 data-i18n="foot.community">Topluluk</h5>
+        <a data-link="discord" target="_blank" rel="noopener">Discord</a><a data-link="x" target="_blank" rel="noopener">X · @Artificialtool</a><a data-link="bmc" target="_blank" rel="noopener">Buy Me a Coffee</a></div>
+    </div>
+    <div class="legal"><span data-i18n="foot.legal">Üçüncü taraf bir futbol oyunu için resmi olmayan bir düzenleme aracıdır; EA Sports ile bağlantılı değildir ve EA Sports tarafından desteklenmez. Tüm markalar, takım ve oyuncu adları ilgili sahiplerine aittir. Çevrimiçi modları değiştirilmemiş dosyalarla oynayın.</span><br>© 2026 Artificial Tool</div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lb" role="dialog" aria-modal="true">
+  <button type="button" data-close aria-label="×">×</button>
+  <button type="button" class="nav-btn prev" aria-label="‹">‹</button>
+  <button type="button" class="nav-btn next" aria-label="›">›</button>
+  <div><img id="lb-img" alt=""><p id="lb-cap"></p></div>
+</div>
+
+<script src="assets/js/config.js?v=8"></script>
+<script src="assets/js/i18n.js?v=8"></script>
+<script src="assets/js/site.js?v=8"></script>
+<script type="module" src="assets/js/viewer.js?v=8"></script>
+</body>
+</html>
