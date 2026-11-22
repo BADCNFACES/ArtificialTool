@@ -96,11 +96,14 @@
       dl.removeAttribute("href"); dl.classList.add("off"); dl.setAttribute("aria-disabled", "true");
       const sp = dl.querySelector("[data-i18n]"); if (sp) sp.dataset.i18n = "cta.dlSoon";
     }
-    $$("[data-bmc]").forEach(a => { a.href = (S.bmcLinks || {})[a.dataset.bmc] || S.bmc || "#"; });
+    $$("[data-bmc]").forEach(a => {
+      const u = (S.bmcLinks || {})[a.dataset.bmc] || S.bmc || "";
+      if (!u || /KULLANICIADIN/.test(u)) a.style.display = "none"; else a.href = u;   // bağlantı girilmemiş
+    });
     if (S.sales === false) {                 // ücretli sürüm satışı kapalı → "yakında"
       $$("[data-bmc]").forEach(a => { a.removeAttribute("href"); a.classList.add("off"); a.setAttribute("aria-disabled", "true"); a.dataset.i18n = "plan.soon"; });
-      $$("[data-pick=standard],[data-pick=ultimate]").forEach(a => { a.style.display = "none"; });
-      $$("#req-form input[name=edition]").forEach(r => { if (r.value !== "lite") { r.disabled = true; r.checked = false; } else r.checked = true; });
+      $$("[data-pick]").forEach(a => { a.style.display = "none"; });
+      $$("#req-form input[name=edition]").forEach(r => { r.disabled = true; });
     }
     $$("[data-pick]").forEach(a => a.addEventListener("click", () => {
       const r = $(`#req-form input[name=edition][value=${a.dataset.pick}]`);
@@ -169,12 +172,11 @@
       ul.innerHTML = items.map((x, i) => `<li class="${i === 0 && ul.dataset.list !== "pl.lite" ? "inc" : ""}">${esc(x)}</li>`).join("");
     });
     const P = S.prices || {};
-    ["standard", "ultimate"].forEach(k => {
+    ["lite", "standard", "ultimate"].forEach(k => {
       const el = $(`[data-price="${k}"]`);
       if (el) el.innerHTML = P[k] ? `${esc(P[k])} <small>${esc(t("plan.once"))}</small>` : `<small>${esc(t("plan.seeBmc"))}</small>`;
-      $$(`[data-price-mini="${k}"]`).forEach(s => { s.textContent = S.sales === false ? t("f.paidSoon") : (P[k] || t("plan.paidShort")); });
+      $$(`[data-price-mini="${k}"]`).forEach(s => { s.textContent = S.sales === false ? t("f.paidSoon") : (P[k] ? P[k] + " " + t("plan.once") : t("plan.paidShort")); });
     });
-    if (P.lite) $('[data-price="lite"]').textContent = P.lite;
   }
 
   // ------------------------------------------------------------ görüntüler
@@ -239,10 +241,24 @@
 
   // ------------------------------------------------------------ talep formu
   function edition() { const r = $("#req-form input[name=edition]:checked"); return r ? r.value : "ultimate"; }
-  function togglePayer() { const f = $("#f-payer"); if (f) f.style.display = edition() === "lite" ? "none" : ""; }
+  function kind() { const r = $("#req-form input[name=kind]:checked"); return r ? r.value : "new"; }
+  function togglePayer() { const f = $("#f-renew"); if (f) f.style.display = kind() === "renew" ? "" : "none"; }
+  // Buy Me a Coffee "Welcome note" bağlantısı: ?plan=lite|standard|ultimate[&renew=1]#talep
+  function fromWelcome() {
+    const q = new URLSearchParams(location.search), plan = (q.get("plan") || "").toLowerCase();
+    if (!["lite", "standard", "ultimate"].includes(plan)) return;
+    const r = $(`#req-form input[name=edition][value=${plan}]`);
+    if (r && !r.disabled) r.checked = true;
+    if (q.get("renew") === "1") { const k = $("#req-form input[name=kind][value=renew]"); if (k) k.checked = true; }
+    togglePayer();
+    const msg = $("#form-msg"); if (msg) { msg.className = "form-msg ok"; msg.textContent = t("f.welcome"); }
+    setTimeout(() => { const s = $("#talep"); if (s) s.scrollIntoView({behavior: "smooth", block: "start"}); }, 400);
+  }
   function form() {
     const f = $("#req-form"), msg = $("#form-msg"), send = $("#f-send");
-    f.addEventListener("change", e => { if (e.target.name === "edition") togglePayer(); });
+    f.addEventListener("change", e => { if (e.target.name === "edition" || e.target.name === "kind") togglePayer(); });
+    togglePayer();
+    fromWelcome();
     const err = k => { msg.className = "form-msg err"; msg.textContent = t("err." + k) || t("err.GENERIC"); };
     f.addEventListener("submit", async e => {
       e.preventDefault();
@@ -252,14 +268,17 @@
       const payer = $("#payer").value.trim();
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return err("BAD_EMAIL");
       if (email.toLowerCase() !== email2.toLowerCase()) return err("MISMATCH");
-      if (ed !== "lite" && !payer) return err("NO_PAYER");
+      if (!payer) return err("NO_PAYER");
+      const renew = kind() === "renew" ? $("#renew_key").value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
+      if (kind() === "renew" && renew.length !== 20) return err("BAD_KEY");
+      const renew_key = renew ? renew.match(/.{5}/g).join("-") : "";
       if (!$("#consent").checked) return err("CONSENT");
       send.disabled = true; send.querySelector("span").textContent = t("f.sending");
       try {
         const res = await fetch((S.api || "").replace(/\/+$/, "") + "/v1/request", {
           method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"},
           body: JSON.stringify({edition: ed, email, payer, ref: $("#ref").value.trim(), discord: $("#discord").value.trim(),
-            note: $("#note").value.trim(), lang, website: f.website.value})});
+            note: $("#note").value.trim(), lang, website: f.website.value, renew_key})});
         const r = await res.json();
         if (!r.ok) throw new Error(r.error || "GENERIC");
         f.innerHTML = `<div class="done"><span class="pill"><b>OK</b>${esc(t("f.okTitle"))}</span><b class="grad-text mono">${esc(r.code)}</b><p class="muted">${esc(t("f.okText"))}</p></div>`;

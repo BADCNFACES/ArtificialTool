@@ -20,15 +20,22 @@ window.SITE = {
 
   // Bağlantılar
   launcher: "",                                  // ArtificialLauncher.exe indirme adresi (boşsa düğme "Launcher yakında" der)
-  sales: false,                                  // false → Standart / Ultimate satın alımı "Yakında" (açınca true yap)
-  bmc: "https://buymeacoffee.com/KULLANICIADIN",  // Buy Me a Coffee sayfan
+  sales: true,                                   // false → satın alım "Yakında" (kod talebi kapalı)
+  bmc: "https://buymeacoffee.com/badcnfaces",  // Buy Me a Coffee sayfan
+  bmcLinks: { lite: "", standard: "", ultimate: "" },
   discord: "https://discord.gg/xuCJgxppgK",
   x: "https://x.com/Artificialtool",
 
-  // Sürüm fiyatları (görünen metin). Boş bırakırsan fiyat gösterilmez.
-  prices: { lite: "", standard: "", ultimate: "" },
-  // Ücretli sürümlerin Buy Me a Coffee bağlantıları (boşsa yukarıdaki bmc)
-  bmcLinks: { standard: "", ultimate: "" },
+  // Aylık abonelik fiyatları (görünen metin; sitede "/ ay" eklenir)
+  prices: { lite: "1 €", standard: "10 €", ultimate: "25 €" },
+  // Her sürümün Buy Me a Coffee ÜYELİK bağlantısı (Memberships → seviye → paylaş bağlantısı).
+  // Boşsa yukarıdaki bmc. "KULLANICIADIN" kalırsa ödeme düğmeleri gizlenir.
+  bmcLinks: { lite: "", standard: "", ultimate: "" },
+  // Buy Me a Coffee üyelik seviyelerinin "Welcome note" kısmına koyacağın bağlantılar
+  // (form o sürüm seçili açılır):
+  //   Lite     → https://www.artificialtool.org/?plan=lite#talep
+  //   Standart → https://www.artificialtool.org/?plan=standard#talep
+  //   Ultimate → https://www.artificialtool.org/?plan=ultimate#talep
 
   // Kayan şeritteki gerçek takımlar / oyuncular (img boşsa baş harfler görünür)
   teams: [

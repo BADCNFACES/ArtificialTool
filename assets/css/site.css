@@ -263,6 +263,9 @@ x-en{display:inline}
 .check input{width:18px;height:18px;margin-top:2px;accent-color:#B79AC0}
 .form-msg{grid-column:1/-1;font-size:14px;min-height:20px}
 .form-msg.err{color:var(--err)}
+.form-msg.ok{color:var(--ok,#3ddc97)}
+.eds.eds2{grid-template-columns:repeat(2,1fr)}
+.eds.eds2 label>span b{font-size:15px}
 .done{grid-column:1/-1;text-align:center;padding:30px 10px}
 .done b{display:block;font:700 56px/1 var(--f-head);letter-spacing:.02em;margin:10px 0}
 .hp{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip-path:inset(50%);pointer-events:none;inset-inline-start:0}
